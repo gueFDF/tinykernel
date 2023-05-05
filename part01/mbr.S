@@ -24,16 +24,18 @@ SECTION MBR vstart=0x7c00  ;指定段地址(引导程序的起始地址)
    int 0x10
 
    mov ax ,message
-   mov bp,ax
+   ;es寄存器存放附加数据段的段地址。前面初始化为0 ，bp为附加段地址的偏移量
+   mov bp,ax   
 
    mov ax,0x1301
-   mov bx,0x2
-   int 0x10
+   mov bx,0x2 ;bl 显示颜色,bh 位置
+   mov cx,0xC ;bl 表示字符串长度
+   int 0x10 
 
    jmp $   ;使程序停在此处 $指该行代码地址
 
  ;定义打印的字符串
-   message db "1 MBR"
+   message db "HELLO YANRAN"
  ;($-$$)指的是段首到该行位置的偏移量 ，这一行代码的目的是将512字节的用0填满
    times 510-($-$$) db 0
  ;使用魔术标记该扇区为引导扇区

@@ -1,0 +1,27 @@
+%include"boot.inc"
+section loader vstart = LOADER_BASE_ADDR
+  mov byte [gs:0x00],' '
+  mov byte [gs:0x01],0xA4
+  mov byte [gs:0x02],' '
+  mov byte [gs:0x03],0xA4
+  mov byte [gs:0x04],'2'
+  mov byte [gs:0x05],0xA4
+  mov byte [gs:0x06],' '
+  mov byte [gs:0x07],0xA4
+  mov byte [gs:0x08],'L'
+  mov byte [gs:0x09],0xA4
+  mov byte [gs:0x0A],'O'
+  mov byte [gs:0x0B],0xA4
+  mov byte [gs:0x0C],'A'
+  mov byte [gs:0x0D],0xA4
+  mov byte [gs:0x0E],'D'
+  mov byte [gs:0x0F],0xA4
+  mov byte [gs:0x10],'E'
+  mov byte [gs:0x11],0xA4
+  mov byte [gs:0x12],'R'
+  mov byte [gs:0x13],0xA4
+  mov byte [gs:0x14],' '
+  mov byte [gs:0x15],0xA4
+  mov byte [gs:0x16],' '
+  mov byte [gs:0x17],0xA4
+  jmp $

@@ -16,4 +16,4 @@ ata0:enabled=1,ioaddr1=0x1f0,ioaddr2=0x3f0,irq=14
 #gdbstub:enabled=1,port=1234,text_base=0,data_base=0,bss_base=0
 
 # 加载磁盘
-ata0-master: type=disk, mode=flat, path="boot.img", cylinders=60, heads=16, spt=63
+ata0-master: type=disk, mode=flat, path="boot/boot.img", cylinders=58, heads=16, spt=63

@@ -86,7 +86,7 @@ rd_disk_m_16:
   shr eax,cl    ;在右移动8位
   and al,0x0f   ;与1111
   or al,0xe0    ;或11100000 lba 第 24~27 位
-  mov dx,0x1f6  ; 设置 7~4 位为 1110,表示 lba 模式,主盘
+  mov dx,0x1f6  ; 设置 7~4 位为 1110,表示 lba(扇区从0开始编号) 模式,主盘
   out dx,al
 
   ;第三步写入命令

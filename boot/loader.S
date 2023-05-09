@@ -1,5 +1,5 @@
 %include"boot.inc"
-section loader vstart = LOADER_BASE_ADDR
+  section loader vstart=LOADER_BASE_ADDR
   LOADER_STACK_TOP equ LOADER_BASE_ADDR
   jmp loader_start
 ;构建gdt及其内部描述符
@@ -54,7 +54,7 @@ loader_start:
  mov cr0,eax
   
  ;利用jmp清空流水线
- jmp dword SELECTOR_CODE:p_mode_start
+ jmp  SELECTOR_CODE:p_mode_start
 
 [bits 32] ;开启32位
 p_mode_start:

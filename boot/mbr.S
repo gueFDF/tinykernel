@@ -109,7 +109,7 @@ rd_disk_m_16:
   ;下面四行计算读取次数，并存放在ax当中，
   mov ax,di   ;此时di寄存器存放的是的读取扇区个数
   mov dx,256  
-  mul dx ;dx*ax存放在dx中
+  mul dx ;dx*ax存放在ax中
   mov cx,ax
 
   mov dx,0x1f0

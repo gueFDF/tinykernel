@@ -1,7 +1,10 @@
 ;-------------loader 和 kernel----------
  LOADER_BASE_ADDR equ 0x900
  LOADER_START_SECTOR equ 0x2
-; gdt描述属性
+
+
+ PAGE_DIR_TABLE_POS equ 0x100000
+;--------------   gdt描述符属性  -------------
 ;先描述高32位的 0~23
 ;G段界限粒度 0表示1字节 1表示4kb(我们选择4kb)
  DESC_G_4K equ 1_00000000000000000000000b
@@ -50,8 +53,8 @@
  DESC_DPL_0 + DESC_S_DATA + DESC_TYPE_DATA +0x0b
 
 
- ;选择子
 
+ ;--------------   选择子属性  ---------------
  ;权级RPL
  RPL0 equ 00b
  RPL1 equ 01b
@@ -60,3 +63,11 @@
  ;TI 指定是GDT(全局描述符表)还是LDT(局部描述符表)
  TI_GDT equ 000b
  TI_LDT equ 100b
+
+
+ ;----------------   页表相关属性    --------------
+ PG_P  equ   1b           ;表示存在于物理内存当中
+ PG_RW_R	 equ  00b     ;可读不可写
+ PG_RW_W	 equ  10b     ;可读可写
+ PG_US_S	 equ  000b    ;User级(任意级别都可以访问)
+ PG_US_U	 equ  100b    ;Supervisor级(特群级3不允许访问)

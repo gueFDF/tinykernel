@@ -1,4 +1,4 @@
-megs : 32
+megs : 512
 
 #注意路径 必须是你安装的路径 别弄错了
 romimage: file=/home/cooiboi/bochs/share/bochs/BIOS-bochs-latest

@@ -138,3 +138,54 @@ p_mode_start:
   mov byte [gs:160], 'P'
 
   jmp $
+
+
+;-------------   创建页目录及页表   ---------------
+setup_page:
+;先把页目录占用的空间逐字节清0
+  mov ecx,4096
+  mov esi,0
+.clear_page_dir:
+  mov byte [PAGE_DIR_TABLE_POS] ,0
+  inc esi
+  loop .clear_page_dir
+
+;开始创建也目录项(PDE)
+.creat_pde: 
+  mov eax,PAGE_DIR_TABLE_POS
+  add eax,0x1000  ;此时 eax 为第一个页表的位置及属性
+  mov ebx,eax     ;此处为 ebx 赋值,是为.create_pte 做准备,ebx 为基址
+
+  or eax, PG_US_U | PG_RW_W | PG_P
+  mov [PAGE_DIR_TABLE_POS+0x0] ,eax ;第一个目录项指向第一个页表项(保证页表开启后的顺利切换)
+  mov [PAGE_DIR_TABLE_POS+0xc00],eax;第768个目录项指向第一个页表项
+  
+  sub eax,0x1000
+  mov [PAGE_DIR_TABLE_POS+4092],eax ;使最后一个目录项指向页目录表自己的地址
+
+;下面创建页表项(PTE)
+  mov ecx,256   ;1M低端内存 / 每页大小4k =256
+  mov esi,0
+  mov edx,PG_US_U | PG_RW_W | PG_P
+.clear_page_pte:
+  mov [ebx+esi*4],edx
+  inc esi
+  loop .clear_page_pte
+
+;创建内核其他页表的 PDE
+  mov eax, PAGE_DIR_TABLE_POS
+  add eax,02000 ;此时为第二个页表的位置
+  or eax,PG_US_U | PG_RW_W | PG_P
+  mov ebx,PAGE_DIR_TABLE_POS
+  mov ecx, 254  ; 范围为第 769~1022 的所有目录项数量
+  mov esi, 769
+.creat_kernel_pde:
+  mov [ebx+esi*4],eax
+  inc esi
+  add eax,0x1000
+  loop .creat_kernel_pde
+  ret
+
+
+
+

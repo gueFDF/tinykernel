@@ -135,7 +135,35 @@ p_mode_start:
   mov ax,SELECTOR_VIDEO
   mov gs,ax
 
-  mov byte [gs:160], 'P'
+  ;创建页目录及页表并初始化页内存位图
+  call setup_page
+  ;要将描述符表地址及偏移量写入内存 gdt_ptr,一会儿用新地址重新加载
+  sgdt [gdt_ptr] ;存储到原来gdt所有的位置
+
+
+  ;将 gdt 描述符中视频段描述符中的段基址+0xc0000000（此处单独处理视屏段是因为视频段的基地址不为0）
+  mov ebx,[gdt_ptr+2]  ;GDT_BASE
+  or dword [ebx+0x18+4],0xc0000000  ;+0x18 指到VIDEO_DESC +4
+  ;视频段是第 3 个段描述符,每个描述符是 8 字节,故 0x18
+  ;段描述符的高 4 字节的最高位是段基址的第 31~24 位
+
+  ;将 gdt 的基址加上 0xc0000000 使其成为内核所在的高地址
+  add dword [gdt_ptr+2],0xc0000000 ;;GDT_BASE+0xc0000000
+  add esp,0xc0000000  ;将栈指针同样映射到内核地址
+
+  ;把页目录地址赋给 cr3
+  mov eax, PAGE_DIR_TABLE_POS
+  mov cr3, eax
+
+  ;打开cr0的pg位(第 31 位)
+  mov eax, cr0
+  or eax, 0x80000000
+  mov cr0, eax
+
+  ;在开启分页后,用 gdt 新的地址重新加载
+  lgdt [gdt_ptr]
+  ;重新加载
+  mov byte [gs:160], 'V'
 
   jmp $
 
@@ -146,7 +174,7 @@ setup_page:
   mov ecx,4096
   mov esi,0
 .clear_page_dir:
-  mov byte [PAGE_DIR_TABLE_POS] ,0
+  mov byte [PAGE_DIR_TABLE_POS+esi] ,0
   inc esi
   loop .clear_page_dir
 
@@ -169,6 +197,7 @@ setup_page:
   mov edx,PG_US_U | PG_RW_W | PG_P
 .clear_page_pte:
   mov [ebx+esi*4],edx
+  add edx,4096
   inc esi
   loop .clear_page_pte
 
@@ -185,7 +214,3 @@ setup_page:
   add eax,0x1000
   loop .creat_kernel_pde
   ret
-
-
-
-

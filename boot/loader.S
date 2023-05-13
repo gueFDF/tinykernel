@@ -203,7 +203,7 @@ setup_page:
 
 ;创建内核其他页表的 PDE
   mov eax, PAGE_DIR_TABLE_POS
-  add eax,02000 ;此时为第二个页表的位置
+  add eax,0x2000 ;此时为第二个页表的位置
   or eax,PG_US_U | PG_RW_W | PG_P
   mov ebx,PAGE_DIR_TABLE_POS
   mov ecx, 254  ; 范围为第 769~1022 的所有目录项数量
@@ -214,3 +214,4 @@ setup_page:
   add eax,0x1000
   loop .creat_kernel_pde
   ret
+

@@ -1,6 +1,5 @@
 %include"boot.inc"
   section loader vstart=LOADER_BASE_ADDR
-  LOADER_STACK_TOP equ LOADER_BASE_ADDR
   jmp loader_start
 ;构建gdt及其内部描述符
   GDT_BASE:  dd 0x00000000  ;第0个段描述符没有用
@@ -135,6 +134,13 @@ p_mode_start:
   mov ax,SELECTOR_VIDEO
   mov gs,ax
 
+; -------------------------   加载kernel  ----------------------
+   mov eax, KERNEL_START_SECTOR        ; kernel.bin所在的扇区号
+   mov ebx, KERNEL_BIN_BASE_ADDR       ; 从磁盘读出后，写入到ebx指定的地址
+   mov ecx, 200			       ; 读入的扇区数
+
+   call rd_disk_m_32
+
   ;创建页目录及页表并初始化页内存位图
   call setup_page
   ;要将描述符表地址及偏移量写入内存 gdt_ptr,一会儿用新地址重新加载
@@ -162,13 +168,127 @@ p_mode_start:
 
   ;在开启分页后,用 gdt 新的地址重新加载
   lgdt [gdt_ptr]
-  ;重新加载
-  mov byte [gs:160], 'V'
+    jmp SELECTOR_CODE:enter_kernel	  ;强制刷新流水线,更新gdt
+enter_kernel:
+  call kernel_init
+  mov esp, 0xc009f000
+  jmp KERNEL_ENTRY_POINT 
 
-  jmp $
+;-----------------   将kernel.bin中的segment拷贝到编译的地址   -----------
+kernel_init:
+   xor eax, eax
+   xor ebx, ebx		;ebx记录程序头表地址
+   xor ecx, ecx		;cx记录程序头表中的program header数量
+   xor edx, edx		;dx 记录program header尺寸,即e_phentsize
+
+   mov dx, [KERNEL_BIN_BASE_ADDR + 42]	  ; 偏移文件42字节处的属性是e_phentsize,表示program header大小
+   mov ebx, [KERNEL_BIN_BASE_ADDR + 28]   ; 偏移文件开始部分28字节的地方是e_phoff,表示第1 个program header在文件中的偏移量
+					  ; 其实该值是0x34,不过还是谨慎一点，这里来读取实际值
+   add ebx, KERNEL_BIN_BASE_ADDR
+   mov cx, [KERNEL_BIN_BASE_ADDR + 44]    ; 偏移文件开始部分44字节的地方是e_phnum,表示有几个program header
+.each_segment:
+   cmp byte [ebx + 0], PT_NULL		  ; 若p_type等于 PT_NULL,说明此program header未使用。
+   je .PTNULL
+
+   ;为函数memcpy压入参数,参数是从右往左依然压入.函数原型类似于 memcpy(dst,src,size)
+   push dword [ebx + 16]		  ; program header中偏移16字节的地方是p_filesz,压入函数memcpy的第三个参数:size
+   mov eax, [ebx + 4]			  ; 距程序头偏移量为4字节的位置是p_offset
+   add eax, KERNEL_BIN_BASE_ADDR	  ; 加上kernel.bin被加载到的物理地址,eax为该段的物理地址
+   push eax				  ; 压入函数memcpy的第二个参数:源地址
+   push dword [ebx + 8]			  ; 压入函数memcpy的第一个参数:目的地址,偏移程序头8字节的位置是p_vaddr，这就是目的地址
+   call mem_cpy				  ; 调用mem_cpy完成段复制
+   add esp,12				  ; 清理栈中压入的三个参数
+.PTNULL:
+   add ebx, edx				  ; edx为program header大小,即e_phentsize,在此ebx指向下一个program header 
+   loop .each_segment
+   ret
+
+;----------  逐字节拷贝 mem_cpy(dst,src,size) ------------
+;输入:栈中三个参数(dst,src,size)
+;输出:无
+;---------------------------------------------------------
+mem_cpy:		      
+   cld
+   push ebp
+   mov ebp, esp
+   push ecx		   ; rep指令用到了ecx，但ecx对于外层段的循环还有用，故先入栈备份
+   mov edi, [ebp + 8]	   ; dst
+   mov esi, [ebp + 12]	   ; src
+   mov ecx, [ebp + 16]	   ; size
+   rep movsb		   ; 逐字节拷贝
+
+   ;恢复环境
+   pop ecx		
+   pop ebp
+   ret
 
 
-;-------------   创建页目录及页表   ---------------
+
+rd_disk_m_32:
+  mov esi,eax ;备份eax，因为后面会用到ax寄存器
+  mov di,cx   ;备份cx到di
+  ;读写磁盘
+  ;第一步：设置读取的扇区数
+  mov dx,0x1f2 ;存放端口到0x1f2对应Sector count 寄存器用来指定待读取或待写入的扇区数
+  mov al,cl    ;将读取的扇区数存放如al
+  out dx,al    ;向端口写数据
+  mov eax,esi  ;恢复ax
+
+  ;第二步写入地址
+  ;LBA 地址 7~0 位写入端口 0x1f3
+  mov dx,0x1f3
+  out dx,al
+
+  ;LBA 地址 15~8 位写入端口 0x1f4
+  mov cl,8
+  shr eax,cl ;右移动8位将15~8位移到al
+  mov dx,0x1f4
+  out dx,al
+
+  ;LBA 地址 23~16 位写入端口 0x1f5
+  shr eax,cl ;再右移动8位
+  mov dx,0x1f5
+  out dx,al
+
+  shr eax,cl    ;在右移动8位
+  and al,0x0f   ;与1111(只保留低四位)
+  or al,0xe0    ;或11100000 lba 第 24~27 位（在高4位或上1110,表示 lba(扇区从0开始编号) 模式,主盘）
+  mov dx,0x1f6  
+  out dx,al
+
+  ;第三步写入命令
+  mov dx ,0x1f7
+  mov al ,0x20
+  out dx ,al
+
+  ;第四位：检测硬盘状态
+.not_ready:
+  nop ;空指令，用于debug
+  in al,dx  ;端口也是0x1F7
+  and al,0x88 ;与1000 1000 ，只保留第三位和第七位
+  ;第三位为1表示银盘准备好传输数据,第七位表示硬盘忙
+  cmp al ,0x08 ;进行比较判断硬盘是否准备好，如果相等表示(硬盘忙)没有准备好
+  jnz .not_ready ;没有准备好，继续等
+
+  ;第五步：从0x1f0读取数据
+ 
+  ;di 为要读取的扇区数,一个扇区有 512 字节,每次读入一个字共需 di*512/2 次,所以 di*256
+  ;下面四行计算读取次数，并存放在ax当中，
+  mov ax,di   ;此时di寄存器存放的是的读取扇区个数
+  mov dx,256  
+  mul dx ;dx*ax存放在ax中
+  mov cx,ax
+
+  mov dx,0x1f0
+.go_on_read:
+  in ax,dx ;进行读取
+  mov [ebx],ax
+  add ebx,2
+  loop .go_on_read
+  ret
+
+
+  ;-------------   创建页目录及页表   ---------------
 setup_page:
 ;先把页目录占用的空间逐字节清0
   mov ecx,4096
@@ -214,4 +334,3 @@ setup_page:
   add eax,0x1000
   loop .creat_kernel_pde
   ret
-

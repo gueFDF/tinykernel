@@ -3,7 +3,7 @@ DES=kernel.bin
 DIR_Image=../boot/boot.img
 
 ld: ${SRC_O}
-	ld main.o -Ttext 0xc0001500 -e main -o ${DES}
+	ld -Ttext 0xc0001500 -e main -o ${DES} main.o 
 	@-rm -rf *.o
 
 %.o:%.S

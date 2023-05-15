@@ -1,7 +1,11 @@
 ;-------------loader 和 kernel----------
- LOADER_BASE_ADDR equ 0x900
+ LOADER_BASE_ADDR equ 0x900 ;loader加载地址
+ LOADER_STACK_TOP equ LOADER_BASE_ADDR
  LOADER_START_SECTOR equ 0x2
 
+ KERNEL_BIN_BASE_ADDR equ 0x70000  ;kernel加载地址
+ KERNEL_ENTRY_POINT equ 0xc0001500
+ KERNEL_START_SECTOR equ 0x9
 
  PAGE_DIR_TABLE_POS equ 0x100000
 ;--------------   gdt描述符属性  -------------
@@ -71,3 +75,7 @@
  PG_RW_W	 equ  10b     ;可读可写
  PG_US_S	 equ  000b    ;User级(任意级别都可以访问)
  PG_US_U	 equ  100b    ;Supervisor级(特群级3不允许访问)
+
+
+;-------------  program type 定义   --------------
+ PT_NULL equ 0  ;无效程序头

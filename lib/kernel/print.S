@@ -112,3 +112,26 @@ put_char:
 .put_char_done:
     popad  ;将之前压入栈的通用寄存器出栈
     ret
+
+ ;--------------------------------------------------------------------
+ ;put_str 通过 put_char 来打印以 0 字符结尾的字符串
+ ;--------------------------------------------------------------------
+global put_str
+put_str:
+    push ebx
+    push ecx
+    xor ecx,ecx
+    mov ebx, [esp + 12] ;从栈中得到待打印的字符串地址
+.goon:
+    mov cl, [ebx] ;获取字符
+    cmp cl, 0     ;如果处理到了字符串尾,跳到结束处返回
+    jz .str_over
+    push ecx
+    call put_char
+    add  esp, 4   ;回收栈空间
+    inc  ebx      ;指向下一个字符地址
+    jmp .goon
+.str_over:
+    pop ecx
+    pop ebx
+    ret

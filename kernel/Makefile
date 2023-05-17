@@ -1,6 +1,6 @@
 DES=kernel.bin
 DIR_Image=../boot/boot.img
-file_O=main.o  ../lib/kernel/print.o ../lib/kernel/print_str.o
+file_O=main.o  ../lib/kernel/print.o 
 GCC:
 	gcc  -I ../lib/kernel -m32 -c -o main.o main.c 
 

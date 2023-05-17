@@ -103,7 +103,7 @@ put_char:
 
     ;再设置低8位
     mov dx, 0x03d4 ;索引寄存器
-    mov al, 0x0e   ;用于提供光标位置的高 8 位
+    mov al, 0x0f   ;用于提供光标位置的高 8 位
     out dx, al 
     mov dx, 0x3d5  ;通过读写数据端口 0x3d5 来获得或设置光标位置
     mov al, bl

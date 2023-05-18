@@ -3,6 +3,9 @@ RPL0 equ 0
 SELECTOR_VIDEO equ (0x0003<<3) + TI_GDT + RPL0
 
 [bits 32]
+
+section .data
+put_int_buffer dq 0  ; 定义 8 字节缓冲区用于数字到字符的转换
 section .text
 global put_char
 put_char:
@@ -135,3 +138,62 @@ put_str:
     pop ecx
     pop ebx
     ret
+
+
+global put_int
+put_int:
+    pushad
+    mov ebp, esp 
+    mov eax, [ebp+4*9]  ;call的返回地址和pushad的8个四字节
+    mov edx, eax
+    mov edi, 7 ;偏移量（后面要将低位放在后面，高位放在前面）
+    mov ecx, 8 ;循环次数,32 位数字中,十六进制数字的位数是 8 个
+    mov ebx, put_int_buffer ;基址
+
+.16based_bits:
+    and edx, 0xF ;解析十六进制数字的每一位(只保留低四位)
+    cmp edx, 9   ; 数字 0~9 和 a~f 需要分别处理成对应的字符
+    jg .is_A2F  ;如果大于则进行跳转
+    add edx, '0'
+    jmp .store 
+.is_A2F: ;大于9的数字转换为a~f
+    sub edx, 10
+    add edx, 'A'
+
+.store:  ;存储
+    mov [ebx+edi], dl 
+    dec edi 
+    shr eax, 4    
+    mov edx, eax  ;存放下一部分数字
+    loop .16based_bits
+
+.ready_to_print:
+    inc edi   ; 此时 edi 退减为-1(0xffffffff),加 1 使其为 0
+.skip_prefix_0 ;跳过前置0
+    cmp edi, 8
+    je .full0 ;如果相等则跳转
+
+.go_on_skip:
+    mov cl, [put_int_buffer+edi]
+    inc edi
+    cmp cl, '0'
+    je .skip_prefix_0  ;继续判断下一位字符是否为字符 0(不是数字 0)
+    dec edi ;如果不是0则恢复edi
+    jmp .put_each_num
+
+.full0:
+    mov cl, '0'
+.put_each_num:
+    push ecx
+    call put_char
+    add esp, 4   ;释放参数
+    inc edi 
+    mov cl, [put_int_buffer+edi] ;获取下一个
+    cmp edi, 8
+    jl .put_each_num
+    popad
+    ret
+
+
+
+

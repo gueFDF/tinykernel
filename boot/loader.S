@@ -186,8 +186,6 @@ kernel_init:
 					  ; 其实该值是0x34,不过还是谨慎一点，这里来读取实际值
    add ebx, KERNEL_BIN_BASE_ADDR
    mov cx, [KERNEL_BIN_BASE_ADDR + 44]    ; 偏移文件开始部分44字节的地方是e_phnum,表示有几个program header
-   add ebx, edx	 ;该行是自行添加，因为64位机器编译32位会多出一个段，不知如何解决
-   sub ecx,1
 .each_segment:
    cmp byte [ebx + 0], PT_NULL		  ; 若p_type等于 PT_NULL,说明此program header未使用。
    je .PTNULL

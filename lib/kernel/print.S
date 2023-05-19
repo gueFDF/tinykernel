@@ -169,7 +169,7 @@ put_int:
 
 .ready_to_print:
     inc edi   ; 此时 edi 退减为-1(0xffffffff),加 1 使其为 0
-.skip_prefix_0 ;跳过前置0
+.skip_prefix_0: ;跳过前置0
     cmp edi, 8
     je .full0 ;如果相等则跳转
 

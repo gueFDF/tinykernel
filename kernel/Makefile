@@ -3,7 +3,9 @@ DIR_Image=../boot/boot.img
 
 
 K=../lib/kernel
-K_OBJS=${K}/print.o
+K_OBJS=${K}/common.o \
+	   ${K}/console.o \
+	   ${K}/string.o 
 U=../lib/user
 U_OBJS=
 GCC:

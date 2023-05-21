@@ -1,18 +1,15 @@
-#include "print.h"
-void main(void) {
-  put_str("str print\n");
-  put_char('k');
-  put_char('e');
-  put_char('r');
-  put_char('n');
-  put_char('e');
-  put_char('l');
-  put_char('\n');
-  put_char('1');
-  put_char('2');
-  //put_char('\b');
-  put_char('\n');
+#include "../lib/kernel/console.h"
+int main(void) {
+  console_clear();
+  console_write("hello world1\n");
+  console_write("hello world2\n");
 
-  put_int(65535); //0xffff
-  while (1);
+  console_write("hello world3\n");
+
+  console_write("hello world4\n");
+
+  while (1)
+    ;
+
+  return 0;
 }

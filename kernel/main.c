@@ -1,8 +1,11 @@
 #include "../lib/kernel/console.h"
+#include "init.h"
 int main(void) {
- // console_clear();
-  console_write("hello world1\n");
- 
+  // console_clear();
+  console_write("I am kernel ! \n");
+
+  init_all();
+  // 为演示中断处理,在此临时开中断
 
   while (1)
     ;

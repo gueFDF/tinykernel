@@ -1,0 +1,6 @@
+*.bin
+*.out
+*.lock
+*.img
+*.vscode
+*.o

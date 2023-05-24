@@ -1,8 +1,8 @@
 #include "interrupt.h"
 
-#include "../lib/kernel/common.h"
-#include "../lib/kernel/console.h"
-#include "../lib/kernel/types.h"
+#include "common.h"
+#include "console.h"
+#include "types.h"
 #include "global.h"
 /*中断门描述符结构体*/
 struct gate_desc {
@@ -45,8 +45,8 @@ static void pic_init(void) {
 /*创建中断门描述符*/
 static void make_idt_desc(struct gate_desc* p_gdesc, uint8_t attr,
                           intr_handler function) {
-  p_gdesc->func_offset_high_word = voidptrTouint32(function) & 0x0000FFFF;
-  p_gdesc->selector = SELECTOR_K_DATA;
+  p_gdesc->func_offset_low_word = voidptrTouint32(function) & 0x0000FFFF;
+  p_gdesc->selector = SELECTOR_K_CODE;
   p_gdesc->dcount = 0;
   p_gdesc->attribute = attr;
   p_gdesc->func_offset_high_word =

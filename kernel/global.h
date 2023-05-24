@@ -1,6 +1,6 @@
 #ifndef __KERNEL_GLOBAL_H
 #define __KERNEL_GLOBAL_H
-#include "../lib/kernel/types.h"
+#include "types.h"
 
 // RPL（四个权级）
 #define RPL0 0

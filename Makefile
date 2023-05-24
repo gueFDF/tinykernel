@@ -1,18 +1,41 @@
-BOOTDIR=boot
-KernelDIR=kernel
-Lib_kernel=lib/kernel
-build:
+B=boot
+K=kernel
+U=user
+K_OBJS=$K/main.o \
+	   $K/common.o \
+	   $K/console.o \
+	   $K/string.o \
+	   $K/types.o \
+	   $K/init.o \
+	   $K/interrupt.o 
 	
-	make -C ${Lib_kernel} build
-	make -C ${BOOTDIR} image
-	make -C ${KernelDIR} image
-	make -C ${Lib_kernel} clean
+	   
+GCC_FLAGS = -c -Wall -m32 -ggdb  \
+-nostdinc -fno-pic -fno-builtin -fno-stack-protector
+
+
+build:${K_OBJS}
+	nasm -I $B/include -o $B/mbr.bin   $B/mbr.S 
+	nasm -I $B/include -o $B/loader.bin $B/loader.S 
+	nasm -f elf -o $K/kernel.o $K/kernel.S 
+	ld -m elf_i386 -T kernel.ld -o kernel.bin ${K_OBJS} $K/kernel.o
+
+$K/%.o:$K/%.c
+	gcc -I $K ${GCC_FLAGS} -o $@ $^ 
+
+
+dd: build
+	dd if=/dev/zero of=$B/boot.img bs=512 count=61440
+	dd if=$B/mbr.bin of=$B/boot.img bs=512 count=1 conv=notrunc
+	dd if=$B/loader.bin of=$B/boot.img bs=512 count=4 seek=2 conv=notrunc
+	dd if=kernel.bin of=$B/boot.img bs=512 count=200 seek=9 conv=notrunc
+
+
+run:dd
+	bochs -qf bochsrc.disk  
 
 clean:
-	make -C ${BOOTDIR} clean
-	make -C ${KernelDIR} clean
-	make -C ${Lib_kernel} clean
-
-
-run:build
-	bochs -qf bochsrc.disk  
+	rm -rf  build 
+	rm -rf  kernel/*.o
+	rm -rf  boot/*.bin
+	rm -rf  *.bin

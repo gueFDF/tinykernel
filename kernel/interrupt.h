@@ -1,6 +1,6 @@
 #ifndef __KERNEL_INTERRUPT_H
 #define __KERNEL_INTERRUPT_H
-#include "../lib/kernel/types.h"
+#include "types.h"
 
 typedef void* intr_handler;  // 用于指向中断处理函数的地址
 

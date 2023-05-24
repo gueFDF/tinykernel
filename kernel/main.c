@@ -1,4 +1,4 @@
-#include "../lib/kernel/console.h"
+#include "console.h"
 #include "init.h"
 int main(void) {
   // console_clear();

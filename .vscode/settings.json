@@ -1,9 +1,0 @@
-{
-    "C_Cpp.errorSquiggles": "enabled",
-    "files.associations": {
-        "*.h": "cpp",
-        "*.S": "asm-collection",
-        "atomic": "c",
-        "cstdint": "c"
-    }
-}

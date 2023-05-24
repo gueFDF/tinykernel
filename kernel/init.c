@@ -1,6 +1,6 @@
 #include "init.h"
 
-#include "../lib/kernel/console.h"
+#include "console.h"
 #include "interrupt.h"
 
 /*负责初始化所有模块 */

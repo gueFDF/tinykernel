@@ -5,7 +5,9 @@ int main(void) {
   console_write("I am kernel ! \n");
 
   init_all();
+  
   // 为演示中断处理,在此临时开中断
+  asm volatile("sti");
 
   while (1)
     ;

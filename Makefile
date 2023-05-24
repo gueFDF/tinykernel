@@ -18,7 +18,8 @@ build:${K_OBJS}
 	nasm -I $B/include -o $B/mbr.bin   $B/mbr.S 
 	nasm -I $B/include -o $B/loader.bin $B/loader.S 
 	nasm -f elf -o $K/kernel.o $K/kernel.S 
-	ld -m elf_i386 -T kernel.ld -o kernel.bin ${K_OBJS} $K/kernel.o
+	nasm -f elf -o $K/print.o $K/print.S 
+	ld -m elf_i386 -T kernel.ld -o kernel.bin ${K_OBJS} $K/kernel.o $K/print.o 
 
 $K/%.o:$K/%.c
 	gcc -I $K ${GCC_FLAGS} -o $@ $^ 

@@ -103,3 +103,53 @@ void console_write_color(char *cstr, real_color_t back, real_color_t fore) {
     console_putc_color(*cstr++, back, fore);
   }
 }
+
+// 屏幕输出一个十六进制的整型数
+void console_write_hex(uint32_t n) {
+  if (n == 0) {
+    console_putc_color('0', rc_black, rc_white);
+    return;
+  }
+  char arr[16];
+  int m;
+  int i = 0;
+  while (n) {
+    m = n % 16;
+    arr[i++] = m;
+    n = n / 16;
+  }
+  int j;
+  for (j = i - 1; j >= 0; j--) {
+    if (arr[j] <= 9) {
+      console_putc_color(arr[j] + '0', rc_black, rc_white);
+    } else {
+      console_putc_color('A' + arr[j] - 10, rc_black, rc_white);
+    }
+  }
+}
+
+// 屏幕输出一个十进制的整型数
+void console_write_dec(uint32_t n) {
+  if (n == 0) {
+    console_putc_color('0', rc_black, rc_white);
+    return;
+  }
+  char arr[16];
+  int m;
+  int i = 0;
+  while (n) {
+    m = n % 10;
+    arr[i++] = m;
+    n = n / 10;
+  }
+  int j;
+  for (j = i - 1; j >= 0; j--) {
+    console_putc_color(arr[j] + '0', rc_black, rc_white);
+  }
+}
+
+// 屏幕输出一个char
+void console_write_char(char c) {
+  console_putc_color(c, rc_black, rc_white);
+  return;
+}

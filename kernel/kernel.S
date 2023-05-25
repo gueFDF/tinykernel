@@ -3,32 +3,47 @@
 
 %define ZERO push 0
 
-extern console_write ;申明外部函数
-
+extern idt_table
 section .data
-intr_str db "interrupt occur!",0xa,0
 global intr_entry_table
 intr_entry_table:
 %macro VECTOR 2
 section .text 
 intr%1entry:
     %2
-    push intr_str
-    call console_write
-    add esp, 4          ;清空参数
+    ;下面进行保存上下文
+    push ds
+    push es 
+    push fs 
+    push gs 
+    pushad  ;通用寄存器入栈
 
     ;如果是从片上进入的中断，除了往从片上发送EOI外，还要往主片上发送EOI
     mov al, 0x20    ;中断结束命令 EOI
     out 0xa0, al    ;向从片上发送
     out 0x20, al    ;向主片上发送
 
-    add esp, 4      ;跨过error_code
-    iret            ;从中断返回，32位下等同指令iretd
+    push %1         ;压入中断号，方便后期调试
+    call [idt_table+%1*4] ; 调用 idt_table 中的 C 版本中断处理函数
+    jmp intr_exit       
 
 section .data  
     dd intr%1entry  ;存储各个中断入口程序的地址
                           ;形成 intr_entry_table 数组
 %endmacro
+
+section .text 
+global intr_exit 
+intr_exit:
+    ;恢复上下文
+    add esp,4   ;跳过中断号
+    popad       ;恢复通用寄存器
+    pop gs 
+    pop fs 
+    pop es 
+    pop ds 
+    add esp, 4  ;跨过error_code
+    iretd       ;从中断返回，32位下等同指令iretd
 
   VECTOR 0x00, ZERO
   VECTOR 0x01, ZERO

@@ -16,10 +16,10 @@ GCC_FLAGS = -c -Wall -m32 -ggdb  \
 
 
 build:${K_OBJS}
-	nasm -I $B/include -o $B/mbr.bin   $B/mbr.S 
-	nasm -I $B/include -o $B/loader.bin $B/loader.S 
-	nasm -f elf -o $K/kernel.o $K/kernel.S 
-	nasm -f elf -o $K/print.o $K/print.S 
+	nasm -I $B/include -o $B/mbr.bin   $B/mbr.asm 
+	nasm -I $B/include -o $B/loader.bin $B/loader.asm 
+	nasm -f elf -o $K/kernel.o $K/kernel.asm 
+	nasm -f elf -o $K/print.o $K/print.asm 
 	ld -m elf_i386 -T kernel.ld -o kernel.bin ${K_OBJS} $K/kernel.o $K/print.o 
 
 $K/%.o:$K/%.c

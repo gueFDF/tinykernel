@@ -10,7 +10,7 @@ typedef void* intr_handler;  // 用于指向中断处理函数的地址
 #define PIC_S_CTRL 0xa0  // 从片的控制端口是0xa0
 #define PIC_S_DATA 0xa1  // 从片的数据端口是0xa1
 
-#define IDT_DESC_CNT 0x21  // 目前总共支持的中断数(33个)
+#define IDT_DESC_CNT 0x31  // 目前总共支持的中断数(33个)
 
 #define EFLAGS_IF 0x00000200  // eflags寄存器中的IF位为1
 

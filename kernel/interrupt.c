@@ -74,7 +74,9 @@ static void general_intr_handler(uint8_t vec_nr) {
     return;  // 伪中断忽略处理
   }
   console_write("int vector : 0x");
-  console_write_hex(vec_nr);
+  console_write_hex(vec_nr);  // 打印中断号
+  console_write_char(' ');
+  console_write(intr_name[vec_nr]);  // 打印中断名称
   console_write_char('\n');
 }
 

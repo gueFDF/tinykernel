@@ -3,9 +3,11 @@
 
 #include "types.h"
 
-void *memcpy(void *dest, const void *src, uint32_t len);
+void memcpy(void *dest, const void *src, uint32_t len);
 
 void memset(void *dest, uint8_t val, uint32_t len);
+
+int memcmp(const void *a_, const void *b_, uint32_t size);
 
 void bzero(void *dest, uint32_t len);
 
@@ -16,5 +18,6 @@ char *strcpy(char *dest, const char *src);
 // // char *strcat(char *dest, const char *src);
 
 size_t strlen(const char *s);
+char *strchr(const char *str, const uint8_t ch);
 
 #endif

@@ -122,3 +122,41 @@ void idt_init() {
 
   console_write("idt_init done\n");
 }
+
+/*开启中断并返回中断前的状态*/
+enum intr_status intr_enable() {
+  enum intr_status old_status;
+  if (INTR_ON == intr_get_status()) {
+    old_status = INTR_ON;
+    return old_status;
+  } else {  // 处于关闭状态
+    old_status = INTR_OFF;
+    asm volatile("sti");  // 开启
+    return old_status;
+  }
+}
+
+/*关闭中断并返回中断前的状态*/
+enum intr_status intr_disable() {
+  enum intr_status old_status;
+  if (INTR_ON == intr_get_status()) {
+    old_status = INTR_ON;
+    asm volatile("cli" ::: "memory");  // 关闭中断
+    return old_status;
+  } else {  // 处于关闭状态
+    old_status = INTR_OFF;
+    return old_status;
+  }
+}
+
+/*设置中断状态*/
+enum intr_status intr_set_status(enum intr_status status) {
+  return status & INTR_ON ? intr_enable() : intr_disable();
+}
+
+/* 获取当前中断状态 */
+enum intr_status intr_get_status() {
+  uint32_t eflags = 0;
+  GET_EFLAGS(eflags);
+  return (EFLAGS_IF & eflags) ? INTR_ON : INTR_OFF;
+}

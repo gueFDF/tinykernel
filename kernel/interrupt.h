@@ -14,7 +14,26 @@ typedef void* intr_handler;  // 用于指向中断处理函数的地址
 
 #define EFLAGS_IF 0x00000200  // eflags寄存器中的IF位为1
 
+// 获取eflags寄存器的内容(先将eflags入栈，再pop)
+#define GET_EFLAGS(EFLAG_VAR) asm volatile("pushfl;popl %0" : "=g"(EFLAG_VAR))
 /*中断初始化*/
 void idt_init();
 
+// 定义两种状态
+enum intr_status {
+  INTR_OFF,  // 关闭中断
+  INTR_ON    // 中断打开
+};
 #endif
+
+/* 获取当前中断状态 */
+enum intr_status intr_get_status();
+
+/*开启中断并返回中断前的状态*/
+enum intr_status intr_enable();
+
+/*关闭中断并返回中断前的状态*/
+enum intr_status intr_disable();
+
+/*设置中断状态*/
+enum intr_status intr_set_status(enum intr_status status);

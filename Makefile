@@ -8,7 +8,8 @@ K_OBJS=$K/main.o \
 	   $K/types.o \
 	   $K/init.o \
 	   $K/interrupt.o\
-	   $K/timer.o
+	   $K/timer.o \
+	   $K/debug.o
 	
 	   
 GCC_FLAGS = -c -Wall -m32 -ggdb  \

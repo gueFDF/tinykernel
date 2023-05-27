@@ -23,4 +23,6 @@ void panic_spin(char *filename, int line, const char *func,
   console_write("condition:");
   console_write((char *)condition);
   console_write_char('\n');
+
+  while (1);
 }

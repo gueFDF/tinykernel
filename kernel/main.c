@@ -9,7 +9,7 @@ int main(void) {
   console_write("\n");
   init_all();
 
-  ASSERT(1 == 2);
+
 
   while (1)
     ;

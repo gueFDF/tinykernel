@@ -147,7 +147,7 @@ p_mode_start:
   sgdt [gdt_ptr] ;存储到原来gdt所有的位置
 
 
-  ;将 gdt 描述符中视频段描述符中的段基址+0xc0000000（此处单独处理视屏段是因为视频段的基地址不为0）
+  ;将 gdt 描述符中视频段描述符中的段基址+0xc0000000
   mov ebx,[gdt_ptr+2]  ;GDT_BASE
   or dword [ebx+0x18+4],0xc0000000  ;+0x18 指到VIDEO_DESC +4
   ;视频段是第 3 个段描述符,每个描述符是 8 字节,故 0x18

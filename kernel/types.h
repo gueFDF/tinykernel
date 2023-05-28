@@ -12,5 +12,7 @@ typedef unsigned int size_t;
 typedef long int intptr_t;
 
 // 用于类型转换 void* -> int
-uint32_t voidptrTouint32(void *value);
+uint32_t voidptrTouint32(void* value);
+
+void* uint32ToVoidptr(uint32_t value);
 #endif

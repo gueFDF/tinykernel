@@ -5,6 +5,7 @@
 
 typedef void thread_func(void*);
 
+#define STACK_MAGIC 0x19870916  // 自定义魔术
 /*进程状态*/
 enum task_status {
   TASK_RUNNING,  // 运行
@@ -48,7 +49,7 @@ struct thread_stack {
   uint32_t edi;
   uint32_t esi;
   void (*eip)(thread_func* func, void* func_arg);
-  void (*unused_retaddr);  // 参数 unused_ret 只为占位置充数为返回地址
+  void(*unused_retaddr);  // 参数 unused_ret 只为占位置充数为返回地址
   thread_func* function;  // 由 kernel_thread 所调用的函数名
   void* func_arg;         // 由 kernel_thread 所调用的函数所需的参数
 };
@@ -64,4 +65,6 @@ struct task_struct {
   uint32_t stack_magic;  // 栈的边界标记,用于检测栈的溢出
 };
 
+struct task_struct* thread_start(char* name, int prio, thread_func fuction,
+                                 void* func_arg);
 #endif

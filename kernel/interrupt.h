@@ -24,7 +24,6 @@ enum intr_status {
   INTR_OFF,  // 关闭中断
   INTR_ON    // 中断打开
 };
-#endif
 
 /* 获取当前中断状态 */
 enum intr_status intr_get_status();
@@ -37,3 +36,8 @@ enum intr_status intr_disable();
 
 /*设置中断状态*/
 enum intr_status intr_set_status(enum intr_status status);
+
+/*中断处理程序的注册*/
+void register_handler(uint8_t vector_no, intr_handler function);
+
+#endif

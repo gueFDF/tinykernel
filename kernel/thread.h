@@ -1,6 +1,7 @@
 #ifndef __THREAD_H_
 #define __THREAD_H_
 
+#include "list.h"
 #include "types.h"
 
 typedef void thread_func(void*);
@@ -60,11 +61,27 @@ struct thread_stack {
 struct task_struct {
   uint32_t* self_kstack;  // 各内核线程都用自己的内核栈
   enum task_status status;
-  uint8_t priority;  // 线程优先级
   char name[16];
+  uint8_t priority;        // 线程优先级
+  uint8_t ticks;           // 每次在处理器上执行的时间嘀嗒数
+  uint32_t elapsed_ticks;  // 运行时间嘀嗒总数（总运行时间）
+
+  struct list_elem general_tag;  // 用于线程在一般的队列(就绪/等待队列)中的结点
+  struct list_elem all_list_tag;  // 总队列(所有线程)中的节点
+
+  uint32_t* pgdir;       // 用于线程在一般的队列中的结点
   uint32_t stack_magic;  // 栈的边界标记,用于检测栈的溢出
 };
 
 struct task_struct* thread_start(char* name, int prio, thread_func fuction,
                                  void* func_arg);
+
+/*获取当前pcb指针*/
+struct task_struct* runing_thread();
+
+/*实现任务调度*/
+void schedule();
+
+/* 初始化线程环境 */
+void thread_init(void);
 #endif

@@ -73,11 +73,22 @@ static void general_intr_handler(uint8_t vec_nr) {
     // IRQ7(用来级联)和IRQ15(保留项)会产生伪中断
     return;  // 伪中断忽略处理
   }
-  console_write("int vector : 0x");
-  console_write_hex(vec_nr);  // 打印中断号
-  console_write_char(' ');
-  console_write(intr_name[vec_nr]);  // 打印中断名称
-  console_write_char('\n');
+  // 重置光标
+  console_write("!!!!!   excetion message begin   !!!!!\n");
+  console_write("        ");
+  console_write(intr_name[vec_nr]);
+  if (vec_nr == 14) {  // 缺页异常
+    int page_fault_vaddr = 0;
+    asm("movl %%cr2 ,%0"
+        : "=r"(page_fault_vaddr));  // 获取触发缺页异常的虚拟地址
+    console_write("\npage fault addr is ");
+    console_write_hex(page_fault_vaddr);
+  }
+
+  console_write("\n!!!!!   excetion message end    !!!!!\n");
+  while (1)
+    ;  // 能进入中断处理程序就表示已经处在关中断情况下
+       // 不会出现调度进程的情况。故下面的死循环不会再被中断
 }
 
 /* 完成一般中断处理函数注册及异常名称注册 */
@@ -147,6 +158,11 @@ enum intr_status intr_disable() {
     old_status = INTR_OFF;
     return old_status;
   }
+}
+
+/*中断处理程序的注册*/
+void register_handler(uint8_t vector_no, intr_handler function) {
+  idt_table[vector_no] = function;
 }
 
 /*设置中断状态*/

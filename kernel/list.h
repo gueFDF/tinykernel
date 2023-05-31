@@ -3,10 +3,10 @@
 
 #include "global.h"
 
-#define offset(struct_type, member) (int)(&(((struct_type*)0)->member))
+#define offset(struct_type, member) (long int)(&(((struct_type*)0)->member))
 
 #define elem2entry(struct_type, struct_member_name, elem_ptr) \
-  (struct_type*)((int)elem_ptr - offset(struct_type, struct_member_name))
+  (struct_type*)((long int)elem_ptr - offset(struct_type, struct_member_name))
 
 struct list_elem {
   struct list_elem* prev;  // 前驱
@@ -33,4 +33,5 @@ uint32_t list_len(struct list* plist);
 struct list_elem* list_traversal(struct list* plist, function func, int arg);
 bool elem_find(struct list* plist, struct list_elem* obj_elem);
 
+void print_ele(struct list* plist);
 #endif

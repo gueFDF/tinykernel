@@ -137,3 +137,33 @@ void thread_init(void) {
   make_main_thread();
   console_write("thread_init done\n");
 }
+
+/*设置线程的阻塞状态*/
+void thread_block(enum task_status stat) {
+  ASSERT(((stat == TASK_BLOCKED) || (stat == TASK_WAITING) ||
+          (stat == TASK_HANGING)))
+  enum intr_status old_status = intr_disable();  // 关闭中断
+  struct task_struct* cur_thread = runing_thread();
+  cur_thread->status = stat;
+  schedule();  // 调度到其他线程
+  /* 待当前线程被解除阻塞后才继续运行下面的 intr_set_status */
+  intr_set_status(old_status);
+}
+
+/*解除pthread的阻塞状态*/
+void thread_unblock(struct task_struct* pthread) {
+  enum intr_status old_status = intr_disable();  // 关闭中断
+
+  ASSERT(((pthread->status == TASK_BLOCKED) ||
+          (pthread->status == TASK_WAITING) ||
+          (pthread->status == TASK_HANGING)));
+  if (pthread->status != TASK_READY) {
+    ASSERT(!elem_find(&thread_ready_list, &pthread->general_tag));
+    if (elem_find(&thread_ready_list, &pthread->general_tag)) {
+      PANIC("thread_unblock: blocked thread in ready_list\n");
+    }
+    list_push(&thread_ready_list, &pthread->general_tag);
+    pthread->status = TASK_READY;
+  }
+  intr_set_status(old_status);
+}

@@ -84,4 +84,10 @@ void schedule();
 
 /* 初始化线程环境 */
 void thread_init(void);
+
+/*设置线程的阻塞状态*/
+void thread_block(enum task_status stat);
+
+/*解除pthread的阻塞状态*/
+void thread_unblock(struct task_struct* pthread);
 #endif

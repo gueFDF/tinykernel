@@ -13,7 +13,8 @@ K_OBJS=$K/main.o \
 	   $K/bitmap.o \
 	   $K/memory.o \
 	   $K/thread.o \
-	   $K/list.o
+	   $K/list.o \
+	   $K/sync.o
 	
 	   
 GCC_FLAGS = -c -Wall -m32 -ggdb  \

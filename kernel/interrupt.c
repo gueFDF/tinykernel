@@ -3,7 +3,6 @@
 #include "common.h"
 #include "console.h"
 #include "global.h"
-#include "print.h"
 #include "types.h"
 /*中断门描述符结构体*/
 struct gate_desc {

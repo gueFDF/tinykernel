@@ -14,7 +14,8 @@ K_OBJS=$K/main.o \
 	   $K/memory.o \
 	   $K/thread.o \
 	   $K/list.o \
-	   $K/sync.o
+	   $K/sync.o \
+	   $K/print.o
 	
 	   
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
@@ -25,9 +26,8 @@ build:${K_OBJS}
 	nasm -I $B/include -o $B/mbr.bin   $B/mbr.asm 
 	nasm -I $B/include -o $B/loader.bin $B/loader.asm 
 	nasm -f elf -o $K/kernel.o $K/kernel.asm 
-	nasm -f elf -o $K/print.o $K/print.asm 
 	nasm -f elf -o $K/switch.o $K/switch.asm
-	ld -m elf_i386 -T kernel.ld -o kernel.bin ${K_OBJS} $K/kernel.o $K/print.o  $K/switch.o
+	ld -m elf_i386 -T kernel.ld -o kernel.bin ${K_OBJS} $K/kernel.o   $K/switch.o
 
 $K/%.o:$K/%.c
 	gcc -I $K ${GCC_FLAGS} -o $@ $^ 

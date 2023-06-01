@@ -3,29 +3,23 @@
 #include "init.h"
 #include "interrupt.h"
 #include "memory.h"
+#include "print.h"
 #include "sync.h"
 #include "thread.h"
 
-struct lock lc;
 void k_thread_a(void*);
 void k_thread_b(void*);
 
 int main(void) {
-  // console_clear();
   console_write("I am kernel ! \n");
 
-  console_write_hex(9454);
-  console_write("\n");
   init_all();
   thread_start("k_thread_a", 31, k_thread_a, "argA ");
 
   thread_start("k_thread_b", 31, k_thread_b, "argB ");
-  lock_init(&lc);
   intr_enable();
   while (1) {
-    lock_acquire(&lc);
-    console_write("Main ");
-    lock_release(&lc);
+    print_str("Main ");
   }
 
   return 0;
@@ -39,9 +33,7 @@ void k_thread_a(void* arg) {
   char* para = arg;
 
   while (1) {
-    lock_acquire(&lc);
-    console_write(para);
-    lock_release(&lc);
+    print_str(para);
   }
 }
 
@@ -53,8 +45,6 @@ void k_thread_b(void* arg) {
   char* para = arg;
 
   while (1) {
-    lock_acquire(&lc);
-    console_write(para);
-    lock_release(&lc);
+    print_str(para);
   }
 }

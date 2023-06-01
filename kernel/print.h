@@ -1,7 +1,11 @@
-#ifndef __LIB_KERNEL_PRINT_H
-#define __LIB_KERNEL_PRINT_H
+#ifndef __PRINT_H_
+#define __PRINT_H_
 #include "types.h"
-void put_char(uint8_t char_asci);
-void put_str(char* message);
-void put_int(uint32_t num);
+void console_init();
+void print_str(char* str);
+void print_char(char c);
+void print_dex(uint32_t n);
+void print_hex(uint32_t n);
+
+
 #endif

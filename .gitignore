@@ -4,3 +4,5 @@
 *.img
 *.vscode
 *.o
+*.json
+*.cache

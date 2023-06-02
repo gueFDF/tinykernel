@@ -1,5 +1,5 @@
-#ifndef __KERNEL_GLOBAL_H
-#define __KERNEL_GLOBAL_H
+#ifndef KERNEL_GLOBAL
+#define KERNEL_GLOBAL
 #include "types.h"
 
 // RPL（四个权级）
@@ -36,4 +36,4 @@
 #define false 0
 
 
-#endif
+#endif /* KERNEL_GLOBAL */

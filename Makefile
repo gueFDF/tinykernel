@@ -1,6 +1,7 @@
 B=boot
 K=kernel
 U=user
+D=device
 K_OBJS=$K/main.o \
 	   $K/common.o \
 	   $K/console.o \
@@ -16,22 +17,25 @@ K_OBJS=$K/main.o \
 	   $K/list.o \
 	   $K/sync.o \
 	   $K/print.o
-	
+
+D_OBJS=$D/keyboard.o 
 	   
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
 -nostdinc -fno-pic -fno-builtin -fno-stack-protector
 
 
-build:${K_OBJS}
+build:${K_OBJS} ${D_OBJS}
 	nasm -I $B/include -o $B/mbr.bin   $B/mbr.asm 
 	nasm -I $B/include -o $B/loader.bin $B/loader.asm 
 	nasm -f elf -o $K/kernel.o $K/kernel.asm 
 	nasm -f elf -o $K/switch.o $K/switch.asm
-	ld -m elf_i386 -T kernel.ld -o kernel.bin ${K_OBJS} $K/kernel.o   $K/switch.o
+	ld -m elf_i386 -T kernel.ld -o kernel.bin ${K_OBJS} ${D_OBJS} $K/kernel.o   $K/switch.o
 
-$K/%.o:$K/%.c
-	gcc -I $K ${GCC_FLAGS} -o $@ $^ 
+$K/%.o:$K/%.c 
+	gcc -I $K -I $D ${GCC_FLAGS} -o $@ $^ 
 
+$D/%.o:$D/%.c
+	gcc -I $K -I $D ${GCC_FLAGS} -o $@ $^ 
 
 dd: build
 	dd if=/dev/zero of=$B/boot.img bs=512 count=61440

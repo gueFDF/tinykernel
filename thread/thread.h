@@ -1,5 +1,5 @@
-#ifndef __THREAD_H_
-#define __THREAD_H_
+#ifndef THREAD_THREAD
+#define THREAD_THREAD
 
 #include "list.h"
 #include "types.h"
@@ -90,4 +90,4 @@ void thread_block(enum task_status stat);
 
 /*解除pthread的阻塞状态*/
 void thread_unblock(struct task_struct* pthread);
-#endif
+#endif /* THREAD_THREAD */

@@ -17,7 +17,8 @@ K_OBJS=$K/main.o \
 	   $K/print.o
 
 D_OBJS=$D/keyboard.o \
-       $D/timer.o
+       $D/timer.o  \
+	   $D/ioqueue.o
 	   
 
 T_OBJS=$T/sync.o \

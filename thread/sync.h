@@ -1,5 +1,5 @@
-#ifndef KERNEL_SYNC
-#define KERNEL_SYNC
+#ifndef THREAD_SYNC
+#define THREAD_SYNC
 #include "list.h"
 #include "thread.h"
 #include "types.h"
@@ -24,4 +24,4 @@ void sema_up(struct semaphore* psema);
 void lock_acquire(struct lock* plock);
 void lock_release(struct lock* plock);
 
-#endif /* KERNEL_SYNC */
+#endif /* THREAD_SYNC */

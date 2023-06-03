@@ -4,6 +4,7 @@
 #include "console.h"
 #include "global.h"
 #include "interrupt.h"
+#include "ioqueue.h"
 
 #define KBD_BUF_PORT 0x60  // 键盘 buffer 寄存器端口号为 0x60
 #define esc '\033'
@@ -37,6 +38,8 @@
  * ext_scancode 用于记录 makecode 是否以 0xe0 开头 */
 static bool ctrl_status, shift_status, alt_status, caps_lock_status,
     ext_scancode;
+
+struct ioqueue kbd_buf;  // 定义键盘缓冲区
 
 /* 以通码make_code为索引的二维数组 */
 static char keymap[][2] = {
@@ -164,7 +167,10 @@ static void intr_keyboard_handler(void) {
 
     /* 只处理ascii码不为0的键 */
     if (cur_char) {
-      console_write_char(cur_char);
+      if (!ioq_full(&kbd_buf)) {
+        console_write_char(cur_char);  // 临时的
+        ioq_putchar(&kbd_buf, cur_char);
+      }
       return;
     }
     /* 记录本次是否按下了下面几类控制键之一,供下次键入时判断组合键 */

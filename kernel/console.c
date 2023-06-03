@@ -9,8 +9,6 @@ static uint16_t *video_memory = (uint16_t *)0xb8000;
 static uint8_t cursor_x = 0;
 static uint8_t cursor_y = 0;
 
-
-
 // 白字黑底的字符属性
 static const uint8_t attribute_byte = (0 << 4) | (15 & 0x0F);
 // 空格
@@ -66,6 +64,7 @@ void console_putc_color(char c, real_color_t back, real_color_t fore) {
   // 0x09 是tab 键的 ASCII 码
   if (c == 0x08 && cursor_x) {
     cursor_x--;
+    video_memory[cursor_y * 80 + cursor_x] = back;  // 删除用空格填充
   } else if (c == 0x09) {
     cursor_x =
         (cursor_x + 8) & ~(8 - 1);  // 该操作是将光标移动到下一个8的整数倍处

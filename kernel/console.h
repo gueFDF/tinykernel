@@ -1,5 +1,5 @@
-#ifndef INCLUDE_CONSOLE_H_
-#define INCLUDE_CONSOLE_H_
+#ifndef KERNEL_CONSOLE
+#define KERNEL_CONSOLE
 
 #include "types.h"
 
@@ -43,4 +43,4 @@ void console_write_dec(uint32_t n);
 // 屏幕输出一个char
 void console_write_char(char c);
 
-#endif  // INCLUDE_CONSOLE_H_
+#endif /* KERNEL_CONSOLE */

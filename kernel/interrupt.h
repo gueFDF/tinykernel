@@ -1,5 +1,5 @@
-#ifndef __KERNEL_INTERRUPT_H
-#define __KERNEL_INTERRUPT_H
+#ifndef KERNEL_INTERRUPT
+#define KERNEL_INTERRUPT
 #include "types.h"
 
 typedef void* intr_handler;  // 用于指向中断处理函数的地址
@@ -40,4 +40,4 @@ enum intr_status intr_set_status(enum intr_status status);
 /*中断处理程序的注册*/
 void register_handler(uint8_t vector_no, intr_handler function);
 
-#endif
+#endif /* KERNEL_INTERRUPT */

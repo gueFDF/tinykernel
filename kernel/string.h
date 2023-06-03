@@ -1,5 +1,5 @@
-#ifndef INCLUDE_STRING_H_
-#define INCLUDE_STRING_H_
+#ifndef KERNEL_STRING
+#define KERNEL_STRING
 
 #include "types.h"
 
@@ -20,4 +20,4 @@ char *strcpy(char *dest, const char *src);
 size_t strlen(const char *s);
 char *strchr(const char *str, const uint8_t ch);
 
-#endif
+#endif /* KERNEL_STRING */

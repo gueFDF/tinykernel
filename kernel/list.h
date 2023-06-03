@@ -1,5 +1,5 @@
-#ifndef __LIST_H_
-#define __LIST_H_
+#ifndef KERNEL_LIST
+#define KERNEL_LIST
 
 #include "global.h"
 
@@ -34,4 +34,4 @@ struct list_elem* list_traversal(struct list* plist, function func, int arg);
 bool elem_find(struct list* plist, struct list_elem* obj_elem);
 
 void print_ele(struct list* plist);
-#endif
+#endif /* KERNEL_LIST */

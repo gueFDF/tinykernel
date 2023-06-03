@@ -70,6 +70,7 @@ void console_putc_color(char c, real_color_t back, real_color_t fore) {
         (cursor_x + 8) & ~(8 - 1);  // 该操作是将光标移动到下一个8的整数倍处
   } else if (c == '\r') {
     cursor_x = 0;
+    cursor_y++;
   } else if (c == '\n') {
     cursor_x = 0;
     cursor_y++;

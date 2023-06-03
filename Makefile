@@ -30,12 +30,13 @@ GCC_FLAGS = -c -Wall -m32 -ggdb  \
 OBJS=${K_OBJS} ${D_OBJS} ${T_OBJS}
 
 
-build:
+
+build:${OBJS}
 	nasm -I $B/include -o $B/mbr.bin   $B/mbr.asm 
 	nasm -I $B/include -o $B/loader.bin $B/loader.asm 
 	nasm -f elf -o $K/kernel.o $K/kernel.asm 
 	nasm -f elf -o $T/switch.o $T/switch.asm
-	ld -m elf_i386 -T kernel.ld -o kernel.bin ${OBJS}$K/kernel.o   $T/switch.o
+	ld -m elf_i386 -T kernel.ld -o kernel.bin ${OBJS} $K/kernel.o   $T/switch.o
 
 $K/%.o:$K/%.c 
 	gcc -I $K -I $D -I $T ${GCC_FLAGS} -o $@ $^ 

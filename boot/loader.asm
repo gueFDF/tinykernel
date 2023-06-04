@@ -1,6 +1,6 @@
 %include"boot.inc"
   section loader vstart=LOADER_BASE_ADDR
-  jmp loader_start
+  
 ;构建gdt及其内部描述符
   GDT_BASE:  dd 0x00000000  ;第0个段描述符没有用
              dd 0x00000000  

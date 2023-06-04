@@ -80,7 +80,7 @@ void tss_init() {
       (uint32_t*)0, 0xfffff, GDT_DATA_ATTR_LOW_DPL3, GDT_ATTR_HIGH);
 
   // 加载gdtr
-  uint64_t gdt_operand = ((8 * 7 - 1) | ((uint64_t)(uint32_t)0xc0000900 << 16));
+  uint64_t gdt_operand = ((7 * 8 - 1) | ((uint64_t)(uint32_t)0xc0000900 << 16));
 
   asm volatile("lgdt %0" ::"m"(gdt_operand));
   asm volatile("ltr %w0" ::"r"(SELECTOR_TSS));

@@ -50,7 +50,7 @@ SECTION MBR vstart=0x7c00  ;指定段地址(引导程序的起始地址)
   mov cx , 5                    ;待读入的扇区数
   call  rd_disk_m_16            ;调用函数，读取
 
-  jmp LOADER_BASE_ADDR
+  jmp LOADER_BASE_ADDR +0x300
 
 
   ; 函数的读取磁盘n个扇区（参数如下）

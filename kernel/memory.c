@@ -90,7 +90,7 @@ static void mem_pool_init(uint32_t all_mem) {
 
 void mem_init(void) {
   console_write("mem_init start\n");
-  uint32_t mem_bytes_total = (*(uint32_t*)(0xb03));
+  uint32_t mem_bytes_total = (*(uint32_t*)(0xb00));
   mem_pool_init(mem_bytes_total);  // 初始化内存池
   console_write("mem_init done\n");
 }

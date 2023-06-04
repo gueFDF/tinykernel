@@ -5,7 +5,7 @@
 #include "debug.h"
 #include "string.h"
 
-#define PG_SIZE 4096  // 一个物理页的大小
+
 
 // 位图地址(一个4kb位图可以支持128MB内存)，9a000~9e000,4个页框大小的位图
 #define MEM_BITMAP_BASE 0xc009a000

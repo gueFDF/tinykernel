@@ -7,6 +7,7 @@
 #include "print.h"
 #include "thread.h"
 #include "timer.h"
+#include "tss.h"
 /*负责初始化所有模块 */
 void init_all() {
   console_write("init_all\n");
@@ -14,6 +15,7 @@ void init_all() {
   timer_init();     // 初始化PIT
   mem_init();       // 内存池初始化
   keyboard_init();  // 键盘初始化
+  tss_init();       // tss初始化
   thread_init();    // 初始化线程环境
   console_init();
 }

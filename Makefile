@@ -1,8 +1,9 @@
 B=boot
 K=kernel
-U=user
 D=device
 T=thread
+U=userprog
+
 K_OBJS=$K/main.o \
 	   $K/common.o \
 	   $K/console.o \
@@ -24,11 +25,15 @@ D_OBJS=$D/keyboard.o \
 T_OBJS=$T/sync.o \
 	   $T/thread.o 
 
+
+U_OBJS=$U/tss.o
+
+
 	
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
 -nostdinc -fno-pic -fno-builtin -fno-stack-protector
 
-OBJS=${K_OBJS} ${D_OBJS} ${T_OBJS}
+OBJS=${K_OBJS} ${D_OBJS} ${T_OBJS} ${U_OBJS}
 
 
 
@@ -40,14 +45,16 @@ build:${OBJS}
 	ld -m elf_i386 -T kernel.ld -o kernel.bin ${OBJS} $K/kernel.o   $T/switch.o
 
 $K/%.o:$K/%.c 
-	gcc -I $K -I $D -I $T ${GCC_FLAGS} -o $@ $^ 
+	gcc -I $K -I $D -I $T -I $U ${GCC_FLAGS} -o $@ $^ 
 
 $D/%.o:$D/%.c
-	gcc -I $K -I $D -I $T ${GCC_FLAGS} -o $@ $^ 
+	gcc -I $K -I $D -I $T -I $U ${GCC_FLAGS} -o $@ $^ 
 
 $T/%.o:$T/%.c
-	gcc -I $K -I $D -I $T ${GCC_FLAGS} -o $@ $^ 
+	gcc -I $K -I $D -I $T -I $U ${GCC_FLAGS} -o $@ $^ 
 
+$U/%.o:$U/%.c
+	gcc -I $K -I $D -I $T -I $U ${GCC_FLAGS} -o $@ $^
 	
 dd: build
 	dd if=/dev/zero of=$B/boot.img bs=512 count=61440

@@ -1,7 +1,8 @@
-#ifndef __KERNEL_MEMORY_H_
-#define __KERNEL_MEMORY_H_
+#ifndef KERNEL_MEMORY
+#define KERNEL_MEMORY
 #include "bitmap.h"
 #include "types.h"
+#define PG_SIZE 4096  // 一个物理页的大小
 
 /*虚拟地址池，用于虚拟地址管理*/
 struct virtual_addr {
@@ -27,4 +28,4 @@ enum pool_flags {
 void mem_init(void);
 
 void* get_kernel_pages(uint32_t pg_cnt);
-#endif
+#endif /* KERNEL_MEMORY */

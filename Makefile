@@ -26,7 +26,8 @@ T_OBJS=$T/sync.o \
 	   $T/thread.o 
 
 
-U_OBJS=$U/tss.o
+U_OBJS=$U/tss.o \
+	   $U/process.o
 
 
 	
@@ -65,9 +66,13 @@ dd: build
 
 run:dd
 	bochs -qf bochsrc.disk  
-
+	
 clean:
 	rm -rf  build 
 	rm -rf  kernel/*.o
+	rm -rf  device/*.o
+	rm -rf  thread/*.o
+	rm -rf  userprog/*.o
 	rm -rf  boot/*.bin
 	rm -rf  *.bin
+	rm -rf  boot/*.img

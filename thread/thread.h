@@ -2,6 +2,7 @@
 #define THREAD_THREAD
 
 #include "list.h"
+#include "memory.h"
 #include "types.h"
 
 typedef void thread_func(void*);
@@ -69,9 +70,13 @@ struct task_struct {
   struct list_elem general_tag;  // 用于线程在一般的队列(就绪/等待队列)中的结点
   struct list_elem all_list_tag;  // 总队列(所有线程)中的节点
 
-  uint32_t* pgdir;       // 用于线程在一般的队列中的结点
+  uint32_t* pgdir;                     // 进程自己页表的虚拟地址
+  struct virtual_addr userprog_vaddr;  // 放进程页目录表的虚拟地址
   uint32_t stack_magic;  // 栈的边界标记,用于检测栈的溢出
 };
+
+extern struct list thread_ready_list;
+extern struct list thread_all_list;
 
 struct task_struct* thread_start(char* name, int prio, thread_func fuction,
                                  void* func_arg);
@@ -90,4 +95,8 @@ void thread_block(enum task_status stat);
 
 /*解除pthread的阻塞状态*/
 void thread_unblock(struct task_struct* pthread);
+
+void init_thread(struct task_struct* pthread, char* name, int prio);
+void thread_create(struct task_struct* pthread, thread_func function,
+                   void* func_arg);
 #endif /* THREAD_THREAD */

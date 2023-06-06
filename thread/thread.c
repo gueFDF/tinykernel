@@ -6,9 +6,9 @@
 #include "interrupt.h"
 #include "list.h"
 #include "memory.h"
+#include "process.h"
 #include "string.h"
 #include "types.h"
-
 
 struct task_struct* main_thread;      // 主线程PCB
 struct list thread_ready_list;        // 就绪队列
@@ -111,6 +111,8 @@ void schedule() {
   struct task_struct* next =
       elem2entry(struct task_struct, general_tag, thread_tag);
   next->status = TASK_RUNNING;
+  /* 激活任务页表等 */
+  process_activate(next);
   switch_to(cur, next);
 }
 
@@ -126,16 +128,6 @@ static void make_main_thread(void) {
   // main线程正在运行，所以不需要添加在就绪队列当中
   ASSERT(!elem_find(&thread_all_list, &main_thread->all_list_tag));
   list_append(&thread_all_list, &main_thread->all_list_tag);
-}
-
-/* 初始化线程环境 */
-void thread_init(void) {
-  console_write("thread_init start\n");
-  list_init(&thread_ready_list);
-  list_init(&thread_all_list);
-
-  make_main_thread();
-  console_write("thread_init done\n");
 }
 
 /*设置线程的阻塞状态*/
@@ -166,4 +158,14 @@ void thread_unblock(struct task_struct* pthread) {
     pthread->status = TASK_READY;
   }
   intr_set_status(old_status);
+}
+
+/* 初始化线程环境 */
+void thread_init(void) {
+  console_write("thread_init start\n");
+  list_init(&thread_ready_list);
+  list_init(&thread_all_list);
+
+  make_main_thread();
+  console_write("thread_init done\n");
 }

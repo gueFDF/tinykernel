@@ -91,9 +91,17 @@ struct gdt_desc {
   uint8_t base_high_byte;
 };
 
+#define EFLAGS_MBS (1 << 1)      // 此项必须要设置
+#define EFLAGS_IF_1 (1 << 9)     // 开中断
+#define EFLAGS_IF_0 0            // 关中断
+#define EFLAGS_IOPL_3 (3 << 12)  // IO端口权级别（最低）
+#define EFLAGS_IOPL_0 (0 << 12)  // IOPL0
+
+// 向上取整 (13/4=4)
+#define DIV_ROUND_UP(X, STEP) ((X + STEP - 1) / (STEP))
+
 #define NULL ((void*)0)
 #define bool int
 #define true 1
 #define false 0
-
 #endif /* KERNEL_GLOBAL */

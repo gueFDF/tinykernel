@@ -1,6 +1,7 @@
 #include "process.h"
 
 #include "bitmap.h"
+#include "console.h"
 #include "debug.h"
 #include "global.h"
 #include "interrupt.h"
@@ -99,7 +100,9 @@ void create_user_vaddr_bitmap(struct task_struct* user_prog) {
 void process_execute(void* filename, char* name) {
   // PCB
   struct task_struct* thread = get_kernel_pages(1);
+
   init_thread(thread, name, default_prio);
+  create_user_vaddr_bitmap(thread);
   thread_create(thread, start_process, filename);
   thread->pgdir = create_page_dir();
 

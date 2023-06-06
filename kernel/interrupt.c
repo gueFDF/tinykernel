@@ -40,7 +40,7 @@ static void pic_init(void) {
   outb(PIC_S_DATA, 0x01);  // ICW4: 8086模式, 正常EOI
 
   /*测试键盘,只打开键盘中断,其他全部关闭*/
-  outb(PIC_M_DATA, 0xfc);
+  outb(PIC_M_DATA, 0xfe);
   outb(PIC_S_DATA, 0xff);
 
   console_write("   pic_init done\n");

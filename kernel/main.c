@@ -22,11 +22,11 @@ int main(void) {
   thread_start("k_thread_a", 31, k_thread_a, "argA ");
   thread_start("k_thread_b", 31, k_thread_b, "argB ");
   process_execute(u_prog_a, "user_prog_a");
-  process_execute(u_prog_b, "user_prog_b");
+  // process_execute(u_prog_b, "user_prog_b");
 
   intr_enable();
   while (1) {
-    // console_write("asdsd");
+    print_str("asdsd");
   }
 
   return 0;
@@ -35,20 +35,16 @@ int main(void) {
 /* 在线程中运行的函数 */
 void k_thread_a(void* arg) {
   while (1) {
-    // print_str("v_a:0x ");
-    print_char(' ');
+    print_str("v_a:0x");
     print_hex(test_var_a);
-    print_char(' ');
   }
 }
 
 /* 在线程中运行的函数 */
 void k_thread_b(void* arg) {
   while (1) {
-    // print_str("v_b:0x ");
-    print_char(' ');
+    print_str("v_b:0x");
     print_hex(test_var_b);
-    print_char(' ');
   }
 }
 

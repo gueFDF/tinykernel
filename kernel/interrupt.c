@@ -126,8 +126,11 @@ void idt_init() {
   exception_init();
   pic_init();  // 初始化 8259A
   // 加载idt到idtr寄存器
+  uint64_t a = 0;
+  asm volatile("lidt %0" : : "m"(a));
   uint64_t idt_operand =
-      ((sizeof(idt) - 1) | ((uint64_t)(voidptrTouint32((void*)idt) << 16)));
+      ((sizeof(idt) - 1) | ((uint64_t)((uint32_t)idt) << 16));
+
   asm volatile("lidt %0" : : "m"(idt_operand));
 
   console_write("idt_init done\n");

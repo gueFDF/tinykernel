@@ -3,10 +3,10 @@
 #include "debug.h"
 #include "global.h"
 void memcpy(void *dest, const void *src, uint32_t len) {
-  ASSERT(dest != NULL);
+  ASSERT(dest != NULL && src != NULL);
   uint8_t *To = (uint8_t *)dest;
   uint8_t *From = (uint8_t *)src;
-  while (len--) {
+  while (len-- > 0) {
     *To++ = *From++;
   }
 }

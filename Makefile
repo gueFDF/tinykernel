@@ -27,7 +27,7 @@ T_OBJS=$T/sync.o \
 
 
 U_OBJS=$U/tss.o \
-	   $U/process.o
+	   $U/process.o 
 
 
 	

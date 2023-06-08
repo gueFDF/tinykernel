@@ -5,6 +5,7 @@
 #include "keyboard.h"
 #include "memory.h"
 #include "print.h"
+#include "syscall_init.h"
 #include "thread.h"
 #include "timer.h"
 #include "tss.h"
@@ -17,5 +18,6 @@ void init_all() {
   keyboard_init();  // 键盘初始化
   tss_init();       // tss初始化
   thread_init();    // 初始化线程环境
-  console_init();
+  console_init();   //
+  syscall_init();
 }

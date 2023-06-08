@@ -94,3 +94,30 @@ intr_exit:
   VECTOR 0x2e, ZERO    ;硬盘
   VECTOR 0x2f, ZERO    ;保留
 
+
+ ;---------------------0x80号中断----------------------
+[bits 32]
+extern syscall_table 
+section .text
+global syscall_handler
+syscall_handler:
+    push 0
+    push ds
+    push es 
+    push fs 
+    push gs 
+    pushad  ;通用寄存器入栈
+    push 0x80
+
+    ;将参数压入(内核栈)
+    push edx ;3
+    push ecx ;2
+    push ebx ;1
+
+    call [syscall_table+eax*4]
+    add esp, 12
+
+    ;将返回值存入内核栈eax处(切换为用户栈后会从内核栈恢复eax)
+    mov [esp+8*4], eax
+
+    jmp intr_exit 

@@ -6,6 +6,7 @@
 #include "types.h"
 
 typedef void thread_func(void*);
+typedef int16_t pid_t;
 
 #define STACK_MAGIC 0x19870916  // 自定义魔术
 /*进程状态*/
@@ -61,6 +62,7 @@ struct thread_stack {
 /* 进程或线程的 pcb,程序控制块 */
 struct task_struct {
   uint32_t* self_kstack;  // 各内核线程都用自己的内核栈
+  pid_t pid;
   enum task_status status;
   char name[16];
   uint8_t priority;        // 线程优先级

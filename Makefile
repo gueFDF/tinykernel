@@ -35,6 +35,7 @@ U_OBJS=$U/tss.o \
 	   $U/process.o \
 	   $U/syscall_init.o
 
+L_OBJS=$L/stdio.o
 
 LU_OBJS=${LU}/syscall.o
 
@@ -48,9 +49,10 @@ OBJS=${K_OBJS}   \
 	 ${T_OBJS}   \
 	 ${U_OBJS}   \
 	 ${LK_OBJS}  \
-	 ${LU_OBJS}  
+	 ${LU_OBJS}  \
+	 ${L_OBJS}
 
-include= -I $K -I $D -I $T -I $U -I ${LK} -I ${LU}
+include= -I $K -I $D -I $T -I $U -I $L -I ${LK} -I ${LU} 
 
 build:${OBJS}
 	nasm -I $B/include -o $B/mbr.bin   $B/mbr.asm 
@@ -70,12 +72,17 @@ $T/%.o:$T/%.c
 
 $U/%.o:$U/%.c
 	gcc ${include} ${GCC_FLAGS} -o $@ $^
+
+$L/%.o:$L/%.c
+	gcc ${include} ${GCC_FLAGS} -o $@ $^
 	
 ${LK}/%.o:${LK}/%.c
 	gcc ${include} ${GCC_FLAGS} -o $@ $^
 
 ${LU}/%.o:${LU}/%.c
 	gcc ${include} ${GCC_FLAGS} -o $@ $^
+
+
 
 dd: build
 	dd if=/dev/zero of=$B/boot.img bs=512 count=61440
@@ -98,3 +105,4 @@ clean:
 	@ rm -f  boot/*.img
 	@ rm -rf lib/user/*.o
 	@ rm -rf lib/kernel/*.o
+	@ rm -rf lib/*.o

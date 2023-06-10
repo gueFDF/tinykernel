@@ -1,6 +1,7 @@
 #ifndef KERNEL_MEMORY
 #define KERNEL_MEMORY
 #include "bitmap.h"
+#include "list.h"
 #include "types.h"
 #define PG_SIZE 4096  // 一个物理页的大小
 
@@ -25,10 +26,25 @@ enum pool_flags {
 #define PG_US_S 0  // U/S 属性位值,系统级
 #define PG_US_U 4  // U/S 属性位值,用户级
 
+/*内存块*/
+struct mem_block {
+  struct list_elem free_elem;
+};
+
+/*内存块描述符*/
+struct mem_block_desc {
+  uint32_t block_size;       // 内存块大小
+  uint32_t block_per_arena;  // 该area可容纳mem_block的数量
+  struct list free_list;     // 目前可用的mem_block链表
+};
+
+#define DESC_CNT 7  // 内存块描述符个数
+
 void mem_init(void);
 
 void* get_kernel_pages(uint32_t pg_cnt);
 void* get_user_pages(uint32_t pg_cnt);
 void* get_a_page(enum pool_flags pf, uint32_t vaddr);
 uint32_t addr_v2p(uint32_t vaddr);
+void block_desc_init(struct mem_block_desc* desc_array);
 #endif /* KERNEL_MEMORY */

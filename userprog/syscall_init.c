@@ -1,6 +1,7 @@
 #include "syscall_init.h"
 
 #include "console.h"
+#include "memory.h"
 #include "print.h"
 #include "string.h"
 #include "thread.h"
@@ -21,5 +22,7 @@ void syscall_init(void) {
   console_write("syscall_init start\n");
   syscall_table[SYS_GETPID] = sys_getpid;
   syscall_table[SYS_WRITE] = sys_write;
+  syscall_table[SYS_MALLOC] = sys_malloc;
+  syscall_table[SYS_FREE] = sys_free;
   console_write("syscall_init done\n");
 }

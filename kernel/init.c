@@ -1,6 +1,7 @@
 #include "init.h"
 
 #include "console.h"
+#include "ide.h"
 #include "interrupt.h"
 #include "keyboard.h"
 #include "memory.h"
@@ -20,4 +21,5 @@ void init_all() {
   thread_init();    // 初始化线程环境
   console_init();   //
   syscall_init();
+  ide_init();  // 硬盘初始化
 }

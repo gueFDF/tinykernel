@@ -23,5 +23,6 @@ void sema_down(struct semaphore* psema);
 void sema_up(struct semaphore* psema);
 void lock_acquire(struct lock* plock);
 void lock_release(struct lock* plock);
+void thread_yield(void);
 
 #endif /* THREAD_SYNC */

@@ -102,4 +102,7 @@ struct gdt_desc {
 
 #define NULL ((void*)0)
 typedef enum { false, true } bool;
+
+#define UNUSED __attribute__((unused))  // 告诉编译器忽略未使用的警告
+
 #endif /* KERNEL_GLOBAL */

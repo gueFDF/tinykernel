@@ -24,7 +24,8 @@ K_OBJS=$K/main.o \
 
 D_OBJS=$D/keyboard.o \
        $D/timer.o  \
-	   $D/ioqueue.o
+	   $D/ioqueue.o \
+	   $D/ide.o
 	   
 
 T_OBJS=$T/sync.o \
@@ -39,7 +40,7 @@ L_OBJS=$L/stdio.o
 
 LU_OBJS=${LU}/syscall.o
 
-LK_OBJS=
+LK_OBJS=${LK}/stdio_kernel.o 
 	
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
 -nostdinc -fno-pic -fno-builtin -fno-stack-protector

@@ -6,6 +6,9 @@
 #include "interrupt.h"
 #include "thread.h"
 
+#define IRQ0_FREQUENCY 100                            // 一秒一百次
+#define mil_seconds_per_intr (1000 / IRQ0_FREQUENCY)  // 一次时钟中断多少毫秒
+
 uint32_t ticks;  // ticks 是内核自中断开启以来总共的嘀嗒数
 // 设置控制字寄存器，并且设置计数初始寄存器
 static void frequency_set(uint8_t counter_port, uint8_t counter_on, uint8_t rwl,
@@ -42,4 +45,28 @@ void timer_init() {
 
   register_handler(0x20, intr_timer_handler);  // 注册中断处理函数
   console_write("timer_init done\n");
+}
+
+/* 以 tick 为单位的 sleep,任何时间形式的 sleep 会转换此 ticks 形式 */
+static void tisks_to_sleep(uint32_t sleep_ticks) {
+  uint32_t start_ticks = ticks;
+
+  /* 若间隔的 ticks 数不够便让出 cpu */
+  while (ticks - start_ticks < sleep_ticks) {
+    thread_yield();
+  }
+}
+
+/*以毫秒为单位的sleep*/
+void mtime_sleep(uint32_t m_seconds) {
+  uint32_t sleep_ticks = DIV_ROUND_UP(m_seconds, mil_seconds_per_intr);
+  ASSERT(sleep_ticks > 0);
+  tisks_to_sleep(sleep_ticks);
+}
+
+/*以秒为单位的sleep*/
+void stime_sleep(uint32_t s_seconds) {
+  uint32_t sleep_ticks = DIV_ROUND_UP(s_seconds * 1000, mil_seconds_per_intr);
+  ASSERT(sleep_ticks > 0);
+  tisks_to_sleep(sleep_ticks);
 }

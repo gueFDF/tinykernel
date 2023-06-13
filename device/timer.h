@@ -1,5 +1,6 @@
 #ifndef DEVICE_TIMER
 #define DEVICE_TIMER
+#include "types.h"
 #define IRQ0_FREQUENCY 100       // IRQ0的频率(时钟中断频率)
 #define INPUT_FREQUENCY 1193180  // 作脉冲信号频率
 #define COUNTER0_VALUE INPUT_FREQUENCY / IRQ0_FREQUENCY  // 初始值
@@ -14,4 +15,6 @@
 
 // 初始化PIT8253
 void timer_init();
+void mtime_sleep(uint32_t m_seconds);
+void stime_sleep(uint32_t s_seconds);
 #endif /* DEVICE_TIMER */

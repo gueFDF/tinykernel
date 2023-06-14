@@ -4,7 +4,7 @@ D=device
 T=thread
 U=userprog
 L=lib
-
+F=fs
 LU=lib/user
 LK=lib/kernel
 
@@ -36,6 +36,8 @@ U_OBJS=$U/tss.o \
 	   $U/process.o \
 	   $U/syscall_init.o
 
+F_OBJS=$F/fs.o
+
 L_OBJS=$L/stdio.o
 
 LU_OBJS=${LU}/syscall.o
@@ -51,9 +53,10 @@ OBJS=${K_OBJS}   \
 	 ${U_OBJS}   \
 	 ${LK_OBJS}  \
 	 ${LU_OBJS}  \
-	 ${L_OBJS}
+	 ${L_OBJS}  \
+	 ${F_OBJS}
 
-include= -I $K -I $D -I $T -I $U -I $L -I ${LK} -I ${LU} 
+include= -I $K -I $D -I $T -I $U -I $L -I $F -I ${LK} -I ${LU} 
 
 build:${OBJS}
 	nasm -I $B/include -o $B/mbr.bin   $B/mbr.asm 
@@ -77,6 +80,9 @@ $U/%.o:$U/%.c
 $L/%.o:$L/%.c
 	gcc ${include} ${GCC_FLAGS} -o $@ $^
 	
+$F/%.o:$F/%.c
+	gcc ${include} ${GCC_FLAGS} -o $@ $^
+
 ${LK}/%.o:${LK}/%.c
 	gcc ${include} ${GCC_FLAGS} -o $@ $^
 
@@ -107,3 +113,4 @@ clean:
 	@ rm -rf lib/user/*.o
 	@ rm -rf lib/kernel/*.o
 	@ rm -rf lib/*.o
+	@ rm -rf fs/*.o

@@ -37,7 +37,7 @@
 /*一些硬盘操作的指令*/
 #define CMD_IDENTIFY 0xec      // identufy指令
 #define CMD_READ_SECTOR 0x20   // 读扇区指令
-#define CMD_WRITE_SECTOR 0x10  // 写扇区指令
+#define CMD_WRITE_SECTOR 0x30  // 写扇区指令
 
 /* 定义可读写的最大扇区数,调试用的 */
 #define max_lba ((80 * 1024 * 1024 / 512) - 1)  // 只支持 80MB 硬盘
@@ -300,10 +300,10 @@ static void partition_scan(struct disk* hd, uint32_t ext_lab) {
         p_no++;
         ASSERT(p_no < 4);
       } else {
-        hd->prim_parts[l_no].start_lba = ext_lab + p->start_lba;
-        hd->prim_parts[l_no].sec_cnt = p->sec_cnt;
-        hd->prim_parts[l_no].my_disk = hd;
-        list_append(&partition_list, &hd->prim_parts[l_no].part_tag);
+        hd->logic_parts[l_no].start_lba = ext_lab + p->start_lba;
+        hd->logic_parts[l_no].sec_cnt = p->sec_cnt;
+        hd->logic_parts[l_no].my_disk = hd;
+        list_append(&partition_list, &hd->logic_parts[l_no].part_tag);
         sprintf(hd->logic_parts[l_no].name, "%s%d", hd->name,
                 l_no + 5);  // 逻辑分区是从5开始的
         l_no++;
@@ -334,6 +334,7 @@ void ide_init() {
   printk("ide_init start\n");
   uint8_t hd_cnt = *((uint8_t*)(0x475));  // 获取硬盘的数量
   ASSERT(hd_cnt > 0);
+  list_init(&partition_list);
   channel_cnt = DIV_ROUND_UP(hd_cnt, 2);  // 计算需要的通道数量
   struct ide_channel* channel;
   uint8_t channel_no = 0, dev_no = 0;

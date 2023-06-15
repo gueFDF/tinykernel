@@ -1,7 +1,9 @@
 #include "init.h"
 
 #include "console.h"
+#include "fs.h"
 #include "ide.h"
+#include "init.h"
 #include "interrupt.h"
 #include "keyboard.h"
 #include "memory.h"
@@ -22,4 +24,5 @@ void init_all() {
   console_init();   //
   syscall_init();
   ide_init();  // 硬盘初始化
+  filesys_init();
 }

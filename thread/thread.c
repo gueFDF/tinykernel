@@ -59,7 +59,7 @@ static pid_t allocate_pid(void) {
 void thread_create(struct task_struct* pthread, thread_func function,
                    void* func_arg) {
   // 先预留中断使用栈的空间
-  pthread->self_kstack -= sizeof(struct intr_stack);
+  //  pthread->self_kstack -= sizeof(struct intr_stack);
   // 再预留线程栈使用的空间
   pthread->self_kstack -= sizeof(struct thread_stack);
   struct thread_stack* kthread_stack =
@@ -206,6 +206,6 @@ void thread_init(void) {
   list_init(&thread_all_list);
   lock_init(&pid_lock);
   make_main_thread();
-  idle_thread=thread_start("idle",10,idle,NULL);
+  idle_thread = thread_start("idle", 10, idle, NULL);
   console_write("thread_init done\n");
 }

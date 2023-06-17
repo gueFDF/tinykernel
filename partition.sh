@@ -30,8 +30,8 @@ check_partition_and_init() {
         make_image
         do_fdisk
     else
-        echo  "hd80M.img exist"
-        echo  "hd80M.img 的分区如下"
+        echo "hd80M.img exist"
+        echo "hd80M.img 的分区如下"
         fdisk -l hd80M.img
     fi
 

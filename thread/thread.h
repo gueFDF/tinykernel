@@ -5,6 +5,7 @@
 #include "memory.h"
 #include "types.h"
 
+#define MAX_FILES_OPEN_PER_PROC 8  // 每个进程允许打开文件的最大数量
 typedef void thread_func(void*);
 typedef int16_t pid_t;
 
@@ -68,6 +69,8 @@ struct task_struct {
   uint8_t priority;        // 线程优先级
   uint8_t ticks;           // 每次在处理器上执行的时间嘀嗒数
   uint32_t elapsed_ticks;  // 运行时间嘀嗒总数（总运行时间）
+
+  int32_t fd_table[MAX_FILES_OPEN_PER_PROC];  // 文件描述符数组
 
   struct list_elem general_tag;  // 用于线程在一般的队列(就绪/等待队列)中的结点
   struct list_elem all_list_tag;  // 总队列(所有线程)中的节点

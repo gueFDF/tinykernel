@@ -13,6 +13,66 @@
 
 struct partition* cur_part;  // 默认情况下操作的是哪一个分区
 
+/*文件表*/
+struct file file_table[MAX_FILE_OPEN];
+
+/*从文件表file_table中获取一个空闲位，成功返回下标，失败返回-1*/
+int32_t get_free_solt_in_global() {
+  uint32_t fd_idx = 3;
+  while (fd_idx < MAX_FILE_OPEN) {
+    if (file_table[fd_idx].fd_inode == NULL) {
+      break;
+    }
+    fd_idx++;
+  }
+  if (fd_idx == MAX_FILE_OPEN) {
+    printk("exceed max open files\n");
+    return -1;
+  }
+  return fd_idx;
+}
+
+/*分配一个节点*/
+int32_t inode_bitmap_alloc(struct partition* part) {
+  int32_t bit_idx = bitmap_scan(&part->inode_bitmap, 1);
+  if (bit_idx == -1) {
+    return -1;
+  }
+  bitmap_set(&part->inode_bitmap, bit_idx, 1);
+  return bit_idx;
+}
+
+// 分配一个扇区，返回其扇区地址
+int32_t block_bitmap_alloc(struct partition* part) {
+  int32_t bit_idx = bitmap_scan(&part->block_bitmap, 1);
+  if (bit_idx == -1) {
+    return -1;
+  }
+  bitmap_set(&part->block_bitmap, bit_idx, 1);
+  return (part->sb->data_start_lba + bit_idx);
+}
+
+/*将内存中bitmap第bit_idx位所在的512字节同步到硬盘*/
+void bitmap_sync(struct partition* part, uint32_t bit_idx, uint8_t btmp) {
+  uint32_t off_sec = bit_idx / 4096;         // 该位扇区偏移量
+  uint32_t off_size = off_sec * BLOCK_SIZE;  // 该位字节偏移量
+
+  uint32_t sec_lba;
+  uint8_t* bitmap_off;
+  /*需要被同步到硬盘的位图只有inode_bitmap和block_map*/
+  switch (btmp) {
+    case INODE_BITMAP:
+      sec_lba = part->sb->inode_bitmap_lba + off_sec;
+      bitmap_off = part->inode_bitmap.bits + off_size;
+      break;
+    case BITMAP_MASK:
+      sec_lba = part->sb->block_bitmap_lba + off_sec;
+      bitmap_off = part->block_bitmap.bits + off_size;
+      break;
+  }
+  ide_write(part->my_disk, sec_lba, bitmap_off, 1);
+}
+
 /*在分区链表中找到名为part_name的分区，并将其指针赋给cur_part*/
 static bool mount_partition(struct list_elem* pelem, int arg) {
   char* part_name = (char*)arg;

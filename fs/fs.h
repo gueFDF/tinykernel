@@ -1,5 +1,6 @@
 #ifndef FS_FS
 #define FS_FS
+#include "types.h"
 // 每个分区所支持最大创建的文件数
 #define MAX_FILES_PER_PART 4096
 
@@ -7,7 +8,26 @@
 
 #define SECTOR_SIZE 512         // 扇区字节大小
 #define BLOCK_SIZE SECTOR_SIZE  // 块字节大小
+/*文件结构*/
+struct file {
+  uint32_t fd_pos;  // 当前文件操作的偏移地址，-1表示最大偏移量
+  uint32_t fd_flag;  // 文件操作标识
+  struct inode* fd_inode;
+};
+/*标准输入输出描述符*/
+enum std_fd {
+  stdin_no,   // 0标准输入
+  stdout_no,  // 1标准输出
+  stderr_no   // 2标准错误
+};
 
+/*位图类型*/
+enum bitmap_type {
+  INODE_BITMAP,  // inode位图
+  BLOCK_BITMAP   // 块位图
+};
+
+#define MAX_FILE_OPEN  32// 系统可打开的最大文件数
 /*文件类型*/
 enum file_types {
   FT_UNKNOWN,   // 不支持的文件类型

@@ -2,7 +2,6 @@
 
 #include "debug.h"
 #include "dir.h"
-#include "ide.h"
 #include "inode.h"
 #include "list.h"
 #include "memory.h"

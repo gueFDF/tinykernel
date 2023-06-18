@@ -1,5 +1,6 @@
 #ifndef FS_FS
 #define FS_FS
+#include "ide.h"
 #include "types.h"
 // 每个分区所支持最大创建的文件数
 #define MAX_FILES_PER_PART 4096
@@ -27,7 +28,7 @@ enum bitmap_type {
   BLOCK_BITMAP   // 块位图
 };
 
-#define MAX_FILE_OPEN  32// 系统可打开的最大文件数
+#define MAX_FILE_OPEN 32  // 系统可打开的最大文件数
 /*文件类型*/
 enum file_types {
   FT_UNKNOWN,   // 不支持的文件类型
@@ -35,5 +36,11 @@ enum file_types {
   FT_DIRECTORY  // 目录
 };
 
+extern struct partition* cur_part;
+
 void filesys_init();
+int32_t get_free_solt_in_global();
+int32_t inode_bitmap_alloc(struct partition* part);
+int32_t block_bitmap_alloc(struct partition* part);
+void bitmap_sync(struct partition* part, uint32_t bit_idx, uint8_t btmp);
 #endif /* FS_FS */

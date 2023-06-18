@@ -19,4 +19,13 @@ struct dir_entry {
   enum file_types f_type;            // 文件类型
 };
 
+bool search_dir_entry(struct partition* part, struct dir* pdir,
+                      const char* name, struct dir_entry* dir_e);
+
+struct dir* dir_open(struct partition* part, uint32_t inode_no);
+
+void open_root_dir(struct partition* part);
+
+void create_dir_entry(char* filename, uint32_t inode_no, uint8_t file_types,
+                      struct dir_entry* p_de);
 #endif /* FS_DIR */

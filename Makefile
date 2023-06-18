@@ -36,7 +36,9 @@ U_OBJS=$U/tss.o \
 	   $U/process.o \
 	   $U/syscall_init.o
 
-F_OBJS=$F/fs.o
+F_OBJS=$F/fs.o \
+	   $F/inode.o \
+	   $F/dir.o 
 
 L_OBJS=$L/stdio.o
 

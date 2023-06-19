@@ -83,3 +83,15 @@ char *strcat(char *dst_, const char *src_) {
     ;  // 当*str被赋值为0时,此时表达式不成立,正好添加了字符串结尾的0.
   return dst_;
 }
+
+char *strrchr(const char *str, const uint8_t ch) {
+  ASSERT(str != NULL);
+  char *temp = NULL;
+  while (*str != 0) {
+    if (*str == ch) {
+      temp = (char *)str;
+    }
+    str++;
+  }
+  return temp;
+}

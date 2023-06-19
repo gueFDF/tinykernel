@@ -1,6 +1,7 @@
 #include "dir.h"
 
 #include "debug.h"
+#include "file.h"
 #include "fs.h"
 #include "ide.h"
 #include "memory.h"

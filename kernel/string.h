@@ -19,5 +19,5 @@ char *strcat(char *dest, const char *src);
 
 size_t strlen(const char *s);
 char *strchr(const char *str, const uint8_t ch);
-
+char *strrchr(const char *str, const uint8_t ch);
 #endif /* KERNEL_STRING */

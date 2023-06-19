@@ -38,7 +38,8 @@ U_OBJS=$U/tss.o \
 
 F_OBJS=$F/fs.o \
 	   $F/inode.o \
-	   $F/dir.o 
+	   $F/dir.o  \
+	   $F/file.o
 
 L_OBJS=$L/stdio.o
 

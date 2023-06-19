@@ -15,7 +15,7 @@ int strcmp(const char *str1, const char *str2);
 
 char *strcpy(char *dest, const char *src);
 
-// // char *strcat(char *dest, const char *src);
+char *strcat(char *dest, const char *src);
 
 size_t strlen(const char *s);
 char *strchr(const char *str, const uint8_t ch);

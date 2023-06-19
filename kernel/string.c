@@ -71,3 +71,15 @@ char *strchr(const char *str, const uint8_t ch) {
   }
   return NULL;
 }
+
+/* 将字符串src_拼接到dst_后,将回拼接的串地址 */
+char *strcat(char *dst_, const char *src_) {
+  ASSERT(dst_ != NULL && src_ != NULL);
+  char *str = dst_;
+  while (*str++)
+    ;
+  --str;  // 别看错了，--str是独立的一句，并不是while的循环体
+  while ((*str++ = *src_++))
+    ;  // 当*str被赋值为0时,此时表达式不成立,正好添加了字符串结尾的0.
+  return dst_;
+}

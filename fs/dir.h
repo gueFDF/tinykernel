@@ -32,4 +32,6 @@ void open_root_dir(struct partition* part);
 
 void create_dir_entry(char* filename, uint32_t inode_no, uint8_t file_types,
                       struct dir_entry* p_de);
+bool sync_dir_entry(struct dir* parent_dir, struct dir_entry* p_de,
+                    void* io_buf);
 #endif /* FS_DIR */

@@ -106,4 +106,5 @@ void init_thread(struct task_struct* pthread, char* name, int prio);
 void thread_create(struct task_struct* pthread, thread_func function,
                    void* func_arg);
 void thread_yield(void);
+int32_t pcb_fd_install(uint32_t fd_idx);
 #endif /* THREAD_THREAD */

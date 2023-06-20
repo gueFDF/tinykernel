@@ -1,10 +1,13 @@
 #include "file.h"
 
+#include "debug.h"
 #include "dir.h"
 #include "inode.h"
+#include "interrupt.h"
 #include "stdio_kernel.h"
 #include "string.h"
 #include "super_block.h"
+#include "thread.h"
 
 /*文件表*/
 struct file file_table[MAX_FILE_OPEN];
@@ -146,4 +149,39 @@ rollback:
   }
   sys_free(io_buf);
   return -1;
+}
+
+int32_t file_open(uint32_t inode_no, uint8_t flag) {
+  int fd_idx = get_free_slot_in_global();
+  if (fd_idx == -1) {
+    printk("exceed max open files\n");
+    return -1;
+  }
+  file_table[fd_idx].fd_inode = inode_open(cur_part, inode_no);
+  file_table[fd_idx].fd_pos = 0;
+  file_table[fd_idx].fd_flag = flag;
+  bool* write_deny = &file_table[fd_idx].fd_inode->write_deny;
+  // 如果是具有写权限的打开方式，访问write_den要在临界区
+  if (flag & O_RDWR || flag & O_WRONLY) {
+    enum intr_status old_status = intr_disable();
+    if (!(*write_deny)) {
+      *write_deny = true;
+      intr_set_status(old_status);
+    } else {
+      intr_set_status(old_status);
+      printk("file can’t be write now, try again later\n");
+      return -1;
+    }
+  }
+  return pcb_fd_install(inode_no);
+}
+
+int32_t file_close(struct file* f) {
+  if (f == NULL) {
+    return -1;
+  }
+  f->fd_inode->write_deny = false;
+  inode_close(f->fd_inode);
+  f->fd_inode = NULL;
+  return 0;
 }

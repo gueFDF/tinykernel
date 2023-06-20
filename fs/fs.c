@@ -26,6 +26,7 @@ static bool mount_partition(struct list_elem* pelem, int arg) {
     /* 在内存中创建分区 cur_part 的超级块 */
     cur_part->sb = (struct super_block*)sys_malloc(sizeof(struct super_block));
     if (cur_part->sb == NULL) {
+      sys_free(sb_buf);
       PANIC("alloc memory failed!");
     }
     /*读入超级块*/
@@ -351,7 +352,7 @@ int32_t sys_open(const char* pathname, uint8_t flags) {
     default:
       /* 其余情况均为打开已存在文件:
        * O_RDONLY,O_WRONLY,O_RDWR */
-      // fd = file_open(inode_no, flags);
+      fd = file_open(inode_no, flags);
       break;
   }
   return fd;
@@ -414,4 +415,27 @@ void filesys_init() {
   while (fd_idx < MAX_FILE_OPEN) {
     file_table[fd_idx++].fd_inode = NULL;
   }
+}
+
+// 将fd转换为文件表的下标
+static uint32_t fd_local2global(uint32_t local_fd) {
+  struct task_struct* cur_thred = runing_thread();
+  int32_t globa_idx = cur_thred->fd_table[local_fd];
+  ASSERT(globa_idx >= 0 && globa_idx < MAX_FILES_OPEN_PER_PROC);
+
+  return (uint32_t)globa_idx;
+}
+
+/* 关闭文件描述符 fd 指向的文件,成功返回 0,否则返回-1 */
+
+int32_t sys_close(int32_t fd) {
+  int32_t ret = -1;
+
+  if (fd > 2) {
+    uint32_t _fd = fd_local2global(fd);
+    ret = file_close(&file_table[_fd]);
+    runing_thread()->fd_table[fd] = -1;  // 使该文件描述符位可用
+  }
+
+  return ret;
 }

@@ -48,7 +48,7 @@ LU_OBJS=${LU}/syscall.o
 LK_OBJS=${LK}/stdio_kernel.o 
 	
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
--nostdinc -fno-pic -fno-builtin -fno-stack-protector
+-nostdinc -fno-pic -fno-builtin -fno-stack-protector -mno-sse
 
 OBJS=${K_OBJS}   \
 	 ${D_OBJS}   \

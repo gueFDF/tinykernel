@@ -102,6 +102,8 @@ dd: build
 
 
 run:dd
+	@ rm -rf hd80M.img 
+	sh partition.sh 
 	bochs -qf bochsrc.disk  
 	
 clean:

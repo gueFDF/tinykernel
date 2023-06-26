@@ -5,7 +5,9 @@
 #define SYS_WRITE 1
 #define SYS_MALLOC 2
 #define SYS_FREE 3
+#define SYS_OPEN 4
+#define SYS_CLOSE 5
+
 void syscall_init(void);
 uint32_t sys_getpid(void);
-uint32_t sys_write(char*);
 #endif /* USERPROG_SYSCALL_INIT */

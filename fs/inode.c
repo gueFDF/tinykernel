@@ -8,6 +8,7 @@
 #include "string.h"
 #include "super_block.h"
 #include "thread.h"
+#include "stdio_kernel.h"
 /*用来存储inode位置*/
 struct inode_position {
   bool two_sec;       // inode是否跨扇区
@@ -19,6 +20,7 @@ struct inode_position {
 static void inode_locate(struct partition* part, uint32_t inode_no,
                          struct inode_position* inode_pos) {
   /*inode_table在硬盘上是连续的(只支持4096个文件)*/
+  
   ASSERT(inode_no < 4096);
   uint32_t inode_table_lba = part->sb->inode_table_lba;
   uint32_t inode_size = sizeof(struct inode);

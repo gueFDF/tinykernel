@@ -1,4 +1,5 @@
 #include "syscall.h"
+
 // 无参数的系统调用
 #define _syscall0(NUMBER)                                              \
   ({                                                                   \
@@ -42,8 +43,16 @@
 
 uint32_t getpid() { return _syscall0(SYS_GETPID); }
 
-uint32_t write(char* str) { return _syscall1(SYS_WRITE, str); }
+uint32_t write(int32_t fd, const void* buf, uint32_t count) {
+  return _syscall3(SYS_WRITE, fd, buf, count);
+}
 
 void* malloc(uint32_t size) { return (void*)_syscall1(SYS_MALLOC, size); }
 
 void free(void* ptr) { _syscall1(SYS_FREE, ptr); }
+
+int open(const char* pathname, int flags) {
+ return  _syscall2(SYS_OPEN, pathname, flags);
+}
+
+int close(int fd) {  return _syscall1(SYS_CLOSE, fd); }

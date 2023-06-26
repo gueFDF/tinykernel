@@ -8,6 +8,7 @@
 #include "process.h"
 #include "stdio.h"
 #include "stdio_kernel.h"
+#include "string.h"
 #include "sync.h"
 #include "syscall.h"
 #include "syscall_init.h"
@@ -25,13 +26,15 @@ int main(void) {
   process_execute(u_prog_b, "u_prog_b");
   thread_start("k_thread_a", 31, k_thread_a, "I am thread_a");
   thread_start("k_thread_b", 31, k_thread_b, "I am thread_b");
-  uint32_t fd = sys_open("/file1", O_RDINLY);
+  uint32_t fd = sys_open("/file1", O_CREAT);
   printf("fd:%d\n", fd);
   sys_close(fd);
   printf("%d closed now\n", fd);
 
-  fd = sys_open("/file1", O_RDINLY);
+  fd = sys_open("/file1", O_RDWR);
   printf("fd:%d\n", fd);
+  char* buf = "12123232";
+  sys_write(fd, buf, strlen(buf));
   sys_close(fd);
   printf("%d closed now\n", fd);
   while (1)

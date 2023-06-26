@@ -162,6 +162,7 @@ int32_t file_open(uint32_t inode_no, uint8_t flag) {
   file_table[fd_idx].fd_pos = 0;
   file_table[fd_idx].fd_flag = flag;
   bool* write_deny = &file_table[fd_idx].fd_inode->write_deny;
+
   // 如果是具有写权限的打开方式，访问write_den要在临界区
   if (flag & O_RDWR || flag & O_WRONLY) {
     enum intr_status old_status = intr_disable();
@@ -170,11 +171,11 @@ int32_t file_open(uint32_t inode_no, uint8_t flag) {
       intr_set_status(old_status);
     } else {
       intr_set_status(old_status);
-      printk("file can’t be write now, try again later\n");
+      printk("file can’t be open now, try again later\n");
       return -1;
     }
   }
-  return pcb_fd_install(inode_no);
+  return pcb_fd_install(fd_idx);
 }
 
 int32_t file_close(struct file* f) {
@@ -182,6 +183,7 @@ int32_t file_close(struct file* f) {
     return -1;
   }
   f->fd_inode->write_deny = false;
+
   inode_close(f->fd_inode);
   f->fd_inode = NULL;
   return 0;
@@ -234,18 +236,18 @@ int32_t file_write(struct file* file, const void* buf, uint32_t count) {
     ASSERT(block_bitmap_idx != 0);
     bitmap_sync(cur_part, block_bitmap_idx, BLOCK_BITMAP);
   }
-  /*写入count个字节前，该文件已经占用的块数*/
-  uint32_t file_has_used_blocks =
-      DIV_ROUND_UP(file->fd_inode->i_size, BLOCK_SIZE);
+  /* 写入count个字节前,该文件已经占用的块数 */
+  uint32_t file_has_used_blocks = file->fd_inode->i_size / BLOCK_SIZE + 1;
 
+  /* 存储count字节后该文件将占用的块数 */
   uint32_t file_will_use_blocks =
-      DIV_ROUND_UP(file->fd_inode->i_size + count, BLOCK_SIZE);
+      (file->fd_inode->i_size + count) / BLOCK_SIZE + 1;
 
   ASSERT(file_will_use_blocks <= 140);
 
   // 通过此判断是否需要分配扇区
   uint32_t add_blocks = file_will_use_blocks - file_has_used_blocks;
-
+  /////////////////////////////////////////////
   if (add_blocks == 0) {
     /*在同一个扇区内写入数据，不涉及到分配型的扇区*/
     if (file_will_use_blocks <= 12) {

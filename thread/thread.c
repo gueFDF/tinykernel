@@ -212,7 +212,7 @@ void thread_yield(void) {
 
 int32_t pcb_fd_install(uint32_t fd_idx) {
   struct task_struct* cur_thread = runing_thread();
-  uint32_t idx = 0;
+  uint32_t idx = 3;
   while (idx < MAX_FILES_OPEN_PER_PROC) {
     if (cur_thread->fd_table[idx] == -1) {
       cur_thread->fd_table[idx] = fd_idx;

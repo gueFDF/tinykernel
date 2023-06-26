@@ -1,6 +1,7 @@
 #include "syscall_init.h"
 
 #include "console.h"
+#include "fs.h"
 #include "memory.h"
 #include "print.h"
 #include "string.h"
@@ -13,10 +14,6 @@ syscall syscall_table[syscall_nr];
 // 获取当前任务的pid
 uint32_t sys_getpid(void) { return runing_thread()->pid; }
 
-uint32_t sys_write(char* str) {
-  print_str(str);
-  return strlen(str);
-}
 /*初始化系统调用*/
 void syscall_init(void) {
   console_write("syscall_init start\n");
@@ -24,5 +21,7 @@ void syscall_init(void) {
   syscall_table[SYS_WRITE] = sys_write;
   syscall_table[SYS_MALLOC] = sys_malloc;
   syscall_table[SYS_FREE] = sys_free;
+  syscall_table[SYS_OPEN] = sys_open;
+  syscall_table[SYS_CLOSE] = sys_close;
   console_write("syscall_init done\n");
 }

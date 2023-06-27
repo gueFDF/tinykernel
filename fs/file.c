@@ -229,6 +229,7 @@ int32_t file_write(struct file* file, const void* buf, uint32_t count) {
       printk("file_write: block_bitmap_alloc failed\n");
       return -1;
     }
+
     file->fd_inode->i_sectors[0] = block_lba;
 
     /* 每分配一个块就将位图同步到硬盘 */
@@ -247,13 +248,12 @@ int32_t file_write(struct file* file, const void* buf, uint32_t count) {
 
   // 通过此判断是否需要分配扇区
   uint32_t add_blocks = file_will_use_blocks - file_has_used_blocks;
-  /////////////////////////////////////////////
   if (add_blocks == 0) {
     /*在同一个扇区内写入数据，不涉及到分配型的扇区*/
     if (file_will_use_blocks <= 12) {
       // 使用直接块
       block_idx = file_has_used_blocks - 1;
-      // 指向最后一个已经有数据的扇区
+      // 指向最后一个已经有block_idx数据的扇区
       all_blocks[block_idx] = file->fd_inode->i_sectors[block_idx];
     } else {
       // 使用间接块
@@ -367,7 +367,7 @@ int32_t file_write(struct file* file, const void* buf, uint32_t count) {
 
   while (bytes_written < count) {  // 直接写完所有数据
     memset(io_buf, 0, BLOCK_SIZE);
-    sec_idx = DIV_ROUND_UP(file->fd_inode->i_size, BLOCK_SIZE) - 1;
+    sec_idx = file->fd_inode->i_size / BLOCK_SIZE;
     sec_lba = all_blocks[sec_idx];
     sec_off_bytes = file->fd_inode->i_size % BLOCK_SIZE;
     sec_left_bytes = BLOCK_SIZE - sec_off_bytes;

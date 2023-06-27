@@ -58,12 +58,12 @@ static bool mount_partition(struct list_elem* pelem, int arg) {
     cur_part->inode_bitmap.btmp_bytes_len =
         sb_buf->inode_bitmap_sects * SECTOR_SIZE;
     ide_read(hd, sb_buf->inode_bitmap_lba, cur_part->inode_bitmap.bits,
-             sb_buf->block_bitmap_sects);
+             sb_buf->inode_bitmap_sects);
 
     list_init(&cur_part->open_inodes);
     printk("mount %s done!\n", part->name);
 
-    sys_free(sb_buf);
+    // sys_free(sb_buf);
     // 此处是为了配合 list_traversal
     return true;
   }
@@ -351,6 +351,7 @@ int32_t sys_open(const char* pathname, uint8_t flags) {
       fd = file_create(searched_record.parent_dir, (strchr(pathname, '/') + 1),
                        flags);
       dir_close(searched_record.parent_dir);
+      break;
     default:
       /* 其余情况均为打开已存在文件:
        * O_RDONLY,O_WRONLY,O_RDWR */

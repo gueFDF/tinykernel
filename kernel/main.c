@@ -34,7 +34,13 @@ int main(void) {
   fd = sys_open("/file1", O_RDWR);
   printf("fd:%d\n", fd);
   char* buf = "12123232";
+  char buf2[601] = {0};
+  for (int i = 0; i < 600; i++) {
+    buf2[i] = 'a';
+  }
+  buf2[600] = 0;
   sys_write(fd, buf, strlen(buf));
+  sys_write(fd, buf2, strlen(buf2));
   sys_close(fd);
   printf("%d closed now\n", fd);
   while (1)

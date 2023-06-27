@@ -10,7 +10,8 @@ enum SYSCALL_NR {
   SYS_OPEN,
   SYS_CLOSE,
   SYS_READ,
-  SYS_LSEEK
+  SYS_LSEEK,
+  SYS_UNLINK
 };
 
 uint32_t getpid(void);
@@ -21,4 +22,5 @@ int open(const char* pathname, int flags);
 int close(int fd);
 int read(int fd, void* buf, size_t count);
 int lseek(int fd, int offset, int whence);
+int unlink(const char* pathname);
 #endif /* LIB_USER_SYSCALL */

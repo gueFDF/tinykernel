@@ -38,6 +38,10 @@ int main(void) {
   sys_read(fd, buf, count);
   printf("read : %s\n", buf);
   sys_close(fd);
+
+  unlink("/file1");
+
+  fd = sys_open("/file1", O_RDWR);
   while (1)
     ;
   return 0;

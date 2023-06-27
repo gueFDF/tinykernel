@@ -64,3 +64,5 @@ int read(int fd, void* buf, size_t count) {
 int lseek(int fd, int offset, int whence) {
   return _syscall3(SYS_LSEEK, fd, offset, whence);
 }
+
+int unlink(const char* pathname) { return _syscall1(SYS_UNLINK, pathname); }

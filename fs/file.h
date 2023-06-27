@@ -34,4 +34,5 @@ void bitmap_sync(struct partition* part, uint32_t bit_idx, uint8_t btmp);
 int32_t file_open(uint32_t inode_no, uint8_t flag);
 int32_t file_close(struct file* f);
 int32_t file_write(struct file* file, const void* buf, uint32_t count);
+int32_t file_read(struct file* file, void* buf, uint32_t count);
 #endif /* FS_FILE */

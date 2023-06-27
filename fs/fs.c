@@ -470,3 +470,15 @@ int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {
     return -1;
   }
 }
+
+/* 从文件描述符 fd 指向的文件中读取 count 个字节到 buf,
+若成功则返回读出的字节数,到文件尾则返回-1 */
+int32_t sys_read(int32_t fd, void* buf, uint32_t count) {
+  if (fd < 0) {
+    printk("sys_read: fd error\n");
+    return -1;
+  }
+  ASSERT(buf != NULL);
+  uint32_t _fd = fd_local2global(fd);
+  return file_read(&file_table[_fd], buf, count);
+}

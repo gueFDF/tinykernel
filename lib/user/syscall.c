@@ -52,7 +52,11 @@ void* malloc(uint32_t size) { return (void*)_syscall1(SYS_MALLOC, size); }
 void free(void* ptr) { _syscall1(SYS_FREE, ptr); }
 
 int open(const char* pathname, int flags) {
- return  _syscall2(SYS_OPEN, pathname, flags);
+  return _syscall2(SYS_OPEN, pathname, flags);
 }
 
-int close(int fd) {  return _syscall1(SYS_CLOSE, fd); }
+int close(int fd) { return _syscall1(SYS_CLOSE, fd); }
+
+int read(int fd, void* buf, size_t count) {
+  return _syscall3(SYS_READ, fd, buf, count);
+}

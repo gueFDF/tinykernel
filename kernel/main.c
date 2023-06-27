@@ -26,23 +26,18 @@ int main(void) {
   process_execute(u_prog_b, "u_prog_b");
   thread_start("k_thread_a", 31, k_thread_a, "I am thread_a");
   thread_start("k_thread_b", 31, k_thread_b, "I am thread_b");
-  uint32_t fd = sys_open("/file1", O_CREAT);
-  printf("fd:%d\n", fd);
+  uint32_t fd = sys_open("/file1", O_CREAT | O_RDWR);
+  char buf[64] = {0};
+  int count = 0;
+  char* str = "hello G_OS";
+  count = sys_write(fd, str, strlen(str));
   sys_close(fd);
   printf("%d closed now\n", fd);
 
   fd = sys_open("/file1", O_RDWR);
-  printf("fd:%d\n", fd);
-  char* buf = "12123232";
-  char buf2[601] = {0};
-  for (int i = 0; i < 600; i++) {
-    buf2[i] = 'a';
-  }
-  buf2[600] = 0;
-  sys_write(fd, buf, strlen(buf));
-  sys_write(fd, buf2, strlen(buf2));
+  sys_read(fd, buf, count);
+  printf("read : %s\n", buf);
   sys_close(fd);
-  printf("%d closed now\n", fd);
   while (1)
     ;
   return 0;

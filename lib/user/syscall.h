@@ -8,7 +8,8 @@ enum SYSCALL_NR {
   SYS_MALLOC,
   SYS_FREE,
   SYS_OPEN,
-  SYS_CLOSE
+  SYS_CLOSE,
+  SYS_READ
 };
 
 uint32_t getpid(void);
@@ -17,5 +18,6 @@ void* malloc(uint32_t size);
 void free(void* ptr);
 int open(const char* pathname, int flags);
 int close(int fd);
+int read(int fd, void* buf, size_t count);
 
 #endif /* LIB_USER_SYSCALL */

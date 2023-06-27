@@ -60,3 +60,7 @@ int close(int fd) { return _syscall1(SYS_CLOSE, fd); }
 int read(int fd, void* buf, size_t count) {
   return _syscall3(SYS_READ, fd, buf, count);
 }
+
+int lseek(int fd, int offset, int whence) {
+  return _syscall3(SYS_LSEEK, fd, offset, whence);
+}

@@ -8,6 +8,7 @@
 #define SYS_OPEN 4
 #define SYS_CLOSE 5
 #define SYS_READ 6
+#define SYS_LSEEK 7
 void syscall_init(void);
 uint32_t sys_getpid(void);
 #endif /* USERPROG_SYSCALL_INIT */

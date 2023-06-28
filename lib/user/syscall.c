@@ -1,5 +1,7 @@
 #include "syscall.h"
 
+#include "fs.h"
+
 // 无参数的系统调用
 #define _syscall0(NUMBER)                                              \
   ({                                                                   \
@@ -68,3 +70,13 @@ int lseek(int fd, int offset, int whence) {
 int unlink(const char* pathname) { return _syscall1(SYS_UNLINK, pathname); }
 
 int32_t mkdir(const char* pathname) { return _syscall1(SYS_MKDIR, pathname); }
+
+struct dir* opendir(const char* name) {
+  return (struct dir*)_syscall1(SYS_OPENDDIR, name);
+}
+int32_t closedir(struct dir* dir) { return _syscall1(SYS_CLOSEDIR, dir); }
+
+struct dir_entry* readdir(struct dir* dir) {
+  return (struct dir_entry*)_syscall1(SYS_READDIR, dir);
+}
+void rewinddir(struct dir* dir) { _syscall1(SYS_REWINDDIR, dir); }

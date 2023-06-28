@@ -690,3 +690,51 @@ rollback:
   sys_free(io_buf);
   return -1;
 }
+
+/* 目录打开成功后返回目录指针,失败返回 NULL */
+struct dir* sys_opendir(const char* name) {
+  ASSERT(strlen(name) < MAX_PATH_LEN);
+
+  // 如果是根目录直接返回
+  if (name[0] == '/' && (name[1] == 0 || name[1] == '.')) {
+    return &root_dir;
+  }
+
+  /*先检查待打开的目录是否存在*/
+  struct path_search_record search_record;
+  memset(&search_record, 0, sizeof(struct path_search_record));
+  int inode_no = search_file(name, &search_record);
+
+  struct dir* ret = NULL;
+  if (inode_no == -1) {  // 不存在
+    printk("In %s, sub path %s not exist\n", name, search_record.searched_path);
+  } else {
+    if (search_record.file_type == FT_REGULAR) {  // 不是目录
+      printk("%s is regular file!\n", name);
+    } else if (search_record.file_type == FT_DIRECTORY) {
+      ret = dir_open(cur_part, inode_no);
+    }
+  }
+  dir_close(search_record.parent_dir);
+  return ret;
+}
+
+int32_t sys_closedir(struct dir* dir) {
+  int32_t ret = -1;
+  if (dir != NULL) {
+    dir_close(dir);
+    ret = 0;
+  }
+  return ret;
+}
+
+/* 读取目录 dir 的 1 个目录项,成功后返回其目录项地址,
+到目录尾时或出错时返回 NULL */
+
+struct dir_entry* sys_readdir(struct dir* dir) {
+  ASSERT(dir != NULL);
+  return dir_read(dir);
+}
+
+/*把目录dir的指针dir_pos置0*/
+void sys_rewinddir(struct dir* dir) { dir->dir_pos = 0; }

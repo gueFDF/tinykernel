@@ -11,6 +11,10 @@
 #define SYS_LSEEK 7
 #define SYS_UNLINK 8
 #define SYS_MKDIR 9
+#define SYS_OPENDDIR 10
+#define SYS_CLOSEDIR 11
+#define SYS_READDIR 12
+#define SYS_REWINDDIR 13
 void syscall_init(void);
 uint32_t sys_getpid(void);
 #endif /* USERPROG_SYSCALL_INIT */

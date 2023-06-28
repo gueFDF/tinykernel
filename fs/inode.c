@@ -187,6 +187,7 @@ void inode_release(struct partition* part, uint32_t inode_no) {
   if (inode_to_del->i_sectors[12] != 0) {
     ide_read(part->my_disk, inode_to_del->i_sectors[12], all_blocks + 12, 1);
 
+    block_cnt=140;
     /* 回收一级间接块表占用的扇区 */
     block_bitmap_idx = inode_to_del->i_sectors[12] - part->sb->data_start_lba;
     ASSERT(block_bitmap_idx > 0);
@@ -213,5 +214,5 @@ void inode_release(struct partition* part, uint32_t inode_no) {
   bitmap_set(&part->inode_bitmap, inode_no, 0);
   bitmap_sync(cur_part, inode_no, INODE_BITMAP);
 
-  
+  inode_close(inode_to_del);
 }

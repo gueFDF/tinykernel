@@ -62,7 +62,7 @@ void bitmap_sync(struct partition* part, uint32_t bit_idx, uint8_t btmp) {
       sec_lba = part->sb->inode_bitmap_lba + off_sec;
       bitmap_off = part->inode_bitmap.bits + off_size;
       break;
-    case BITMAP_MASK:
+    case BLOCK_BITMAP:
       sec_lba = part->sb->block_bitmap_lba + off_sec;
       bitmap_off = part->block_bitmap.bits + off_size;
       break;

@@ -66,3 +66,5 @@ int lseek(int fd, int offset, int whence) {
 }
 
 int unlink(const char* pathname) { return _syscall1(SYS_UNLINK, pathname); }
+
+int32_t mkdir(const char* pathname) { return _syscall1(SYS_MKDIR, pathname); }

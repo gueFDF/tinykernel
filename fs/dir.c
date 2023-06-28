@@ -108,6 +108,7 @@ bool sync_dir_entry(struct dir* parent_dir, struct dir_entry* p_de,
   uint32_t dir_size = dir_inode->i_size;
   uint32_t dir_entry_size = cur_part->sb->dir_entry_size;
 
+  printk("dir_entry_size :%d ,dir_size :%d ,name %s\n", dir_entry_size, dir_size,p_de->filename);
   ASSERT(dir_size % dir_entry_size == 0);  // 保证是整数个条目
   uint32_t dir_entrys_per_sec =
       (SECTOR_SIZE / dir_entry_size);  // 每一个扇区的条目个数

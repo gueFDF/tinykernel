@@ -26,5 +26,6 @@ void syscall_init(void) {
   syscall_table[SYS_READ] = sys_read;
   syscall_table[SYS_LSEEK] = sys_lseek;
   syscall_table[SYS_UNLINK] = sys_unlink;
+  syscall_table[SYS_MKDIR] = sys_mkdir;
   console_write("syscall_init done\n");
 }

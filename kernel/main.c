@@ -41,6 +41,10 @@ int main(void) {
 
   unlink("/file1");
 
+  mkdir("/a");
+
+  fd = open("/a/b", O_CREAT | O_RDINLY);
+  printk("/a/b fd:%d\n", fd);
   fd = sys_open("/file1", O_RDWR);
   while (1)
     ;

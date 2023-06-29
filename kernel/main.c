@@ -61,6 +61,11 @@ int main(void) {
   printf("path : %s \n", sys_getcwd(cwd_buf, 32));
   sys_chdir("/dir1");
   printf("path : %s \n", sys_getcwd(cwd_buf, 32));
+  struct stat obj_stat;
+  sys_stat("/dir1", &obj_stat);
+  printf("/dir1`s info\n i_no: %d\n size : %d\n filetype : %s\n ",
+         obj_stat.st_ino, obj_stat.st_size,
+         obj_stat.st_filetype == 2 ? "directory" : "regular");
   while (1)
     ;
   return 0;

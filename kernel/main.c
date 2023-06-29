@@ -57,6 +57,10 @@ int main(void) {
   } else {
     printf("/dir1 open fail!\n");
   }
+  char cwd_buf[32] = {0};
+  printf("path : %s \n", sys_getcwd(cwd_buf, 32));
+  sys_chdir("/dir1");
+  printf("path : %s \n", sys_getcwd(cwd_buf, 32));
   while (1)
     ;
   return 0;

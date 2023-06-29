@@ -31,5 +31,6 @@ void syscall_init(void) {
   syscall_table[SYS_CLOSEDIR] = sys_closedir;
   syscall_table[SYS_READDIR] = sys_readdir;
   syscall_table[SYS_REWINDDIR] = sys_rewinddir;
+  syscall_table[SYS_RMDIR] = sys_rmdir;
   console_write("syscall_init done\n");
 }

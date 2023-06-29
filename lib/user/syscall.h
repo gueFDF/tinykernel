@@ -16,7 +16,8 @@ enum SYSCALL_NR {
   SYS_OPENDDIR,
   SYS_CLOSEDIR,
   SYS_READDIR,
-  SYS_REWINDDIR
+  SYS_REWINDDIR,
+  SYS_RMDIR
 };
 
 uint32_t getpid(void);
@@ -33,4 +34,5 @@ struct dir* opendir(const char* name);
 int32_t closedir(struct dir* dir);
 struct dir_entry* readdir(struct dir* dir);
 void rewinddir(struct dir* dir);
+int32_t rmdir(const char* pathname);
 #endif /* LIB_USER_SYSCALL */

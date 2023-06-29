@@ -34,6 +34,7 @@ int main(void) {
   uint32_t fd2 = sys_open("/dir1/file2", O_CREAT | O_RDWR);
   sys_close(fd);
   sys_close(fd2);
+  sys_rmdir("/dir1/dir2");
   struct dir* p_dir = sys_opendir("/dir1");
 
   if (p_dir) {

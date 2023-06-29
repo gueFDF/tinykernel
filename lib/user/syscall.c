@@ -80,3 +80,5 @@ struct dir_entry* readdir(struct dir* dir) {
   return (struct dir_entry*)_syscall1(SYS_READDIR, dir);
 }
 void rewinddir(struct dir* dir) { _syscall1(SYS_REWINDDIR, dir); }
+
+int32_t rmdir(const char* pathname) { return _syscall1(SYS_RMDIR, pathname); }

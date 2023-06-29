@@ -8,6 +8,12 @@ F=fs
 LU=lib/user
 LK=lib/kernel
 
+# BOCHS相关参数
+BOCHS_PATH=/home/cooiboi/bochs/bin/bochs
+BOCHS_GDB_PATH=/home/forrest/bochs/bin/bochs
+BOCHS_PORt="target remote 127.0.0.1:1234"
+BOCHS_GDB_FLAG='gdbstub:enabled=1,port=1234,text_base=0,data_base=0,bss_base=0'
+
 
 K_OBJS=$K/main.o \
 	   $K/common.o \
@@ -48,7 +54,7 @@ LU_OBJS=${LU}/syscall.o
 LK_OBJS=${LK}/stdio_kernel.o 
 	
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
--nostdinc -fno-pic -fno-builtin -fno-stack-protector -mno-sse
+-nostdinc -fno-pic -fno-builtin -fno-stack-protector -mno-sse -g
 
 OBJS=${K_OBJS}   \
 	 ${D_OBJS}   \
@@ -60,6 +66,9 @@ OBJS=${K_OBJS}   \
 	 ${F_OBJS}
 
 include= -I $K -I $D -I $T -I $U -I $L -I $F -I ${LK} -I ${LU} 
+
+
+
 
 build:${OBJS}
 	nasm -I $B/include -o $B/mbr.bin   $B/mbr.asm 
@@ -104,10 +113,22 @@ dd: build
 run:dd
 	@ rm -rf hd80M.img 
 	sh partition.sh 
-	bochs -qf bochsrc.disk  
+	${BOCHS_PATH} -qf bochsrc.disk  
+	make clean
 	
+run_gdb:dd
+	@ rm -rf hd80M.img 
+	sh partition.sh 
+	${BOCHS_GDB_PATH} -qf bochsrc.disk  ${BOCHS_GDB_FLAG} & 
+	gdb ./kernel.bin -ex ${BOCHS_PORt}
+	pkill bochs
+	make  clean
+	
+
+
 clean:
-	@ rm -rf  build 
+	@ rm -rf *.lock
+	@ rm -rf boot/*.lock
 	@ rm -f  kernel/*.o
 	@ rm -f  device/*.o
 	@ rm -f  thread/*.o
@@ -119,3 +140,4 @@ clean:
 	@ rm -rf lib/kernel/*.o
 	@ rm -rf lib/*.o
 	@ rm -rf fs/*.o
+

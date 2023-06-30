@@ -526,6 +526,20 @@ void sys_free(void* ptr) {
   }
 }
 
+/* 安装 1 页大小的 vaddr,专门针对 fork 时虚拟地址位图无需操作的情况 */
+void* get_a_page_without_opvaddrbitmap(enum pool_flags pf, uint32_t vaddr) {
+  struct pool* mem_pool = pf & PF_KERNEL ? &kernel_pool : &user_pool;
+  lock_acquire(&mem_pool->lock);
+  void* page_phyvaddr = palloc(mem_pool);
+  if (page_phyvaddr == NULL) {
+    lock_release(&mem_pool->lock);
+    return NULL;
+  }
+  page_table_add((void*)vaddr, page_phyvaddr);
+  lock_release(&mem_pool->lock);
+  return (void*)vaddr;
+}
+
 void mem_init(void) {
   console_write("mem_init start\n");
   uint32_t mem_bytes_total = (*(uint32_t*)(0xb00));

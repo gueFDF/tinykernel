@@ -28,6 +28,7 @@ K_OBJS=$K/main.o \
 	   $K/list.o \
 	   $K/print.o
 
+
 D_OBJS=$D/keyboard.o \
        $D/timer.o  \
 	   $D/ioqueue.o \
@@ -35,17 +36,22 @@ D_OBJS=$D/keyboard.o \
 	   
 
 T_OBJS=$T/sync.o \
-	   $T/thread.o 
+	   $T/thread.o \
+	   $T/fork.o
 
 
 U_OBJS=$U/tss.o \
 	   $U/process.o \
-	   $U/syscall_init.o
+	   $U/syscall_init.o 
+
+
 
 F_OBJS=$F/fs.o \
 	   $F/inode.o \
 	   $F/dir.o  \
 	   $F/file.o
+
+
 
 L_OBJS=$L/stdio.o
 
@@ -111,8 +117,8 @@ dd: build
 
 
 run:dd
-	@ rm -rf hd80M.img 
-	sh partition.sh 
+	# @ rm -rf hd80M.img 
+	# sh partition.sh 
 	${BOCHS_PATH} -qf bochsrc.disk  
 	make clean
 	

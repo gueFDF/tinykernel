@@ -50,4 +50,6 @@ void block_desc_init(struct mem_block_desc* desc_array);
 void pfree(uint32_t pg_phy_addr);
 void* sys_malloc(uint32_t size);
 void sys_free(void* ptr);
+void* get_a_page_without_opvaddrbitmap(enum pool_flags pf, uint32_t vaddr);
+void mfree_page(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt);
 #endif /* KERNEL_MEMORY */

@@ -2,6 +2,8 @@
 #define LIB_USER_SYSCALL
 
 #include <types.h>
+typedef int16_t pid_t;
+
 enum SYSCALL_NR {
   SYS_GETPID,
   SYS_WRITE,
@@ -17,7 +19,8 @@ enum SYSCALL_NR {
   SYS_CLOSEDIR,
   SYS_READDIR,
   SYS_REWINDDIR,
-  SYS_RMDIR
+  SYS_RMDIR,
+  SYS_FORK
 };
 
 uint32_t getpid(void);
@@ -35,4 +38,5 @@ int32_t closedir(struct dir* dir);
 struct dir_entry* readdir(struct dir* dir);
 void rewinddir(struct dir* dir);
 int32_t rmdir(const char* pathname);
+pid_t fork();
 #endif /* LIB_USER_SYSCALL */

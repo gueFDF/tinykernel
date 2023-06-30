@@ -20,7 +20,7 @@ static struct list_elem* thread_tag;  // 用于保存队列中的线程结点
 struct lock pid_lock;  // 分配pid锁
 
 extern void switch_to(struct task_struct* cur, struct task_struct* next);
-
+extern void init(void);
 /*系统空闲时运行的线程*/
 static void idle(void* arg UNUSED) {
   while (1) {
@@ -99,7 +99,8 @@ void init_thread(struct task_struct* pthread, char* name, int prio) {
     pthread->fd_table[fd_idx] = -1;
     fd_idx++;
   }
-  pthread->cwd_inode_nr = 0;           // 以根目录作为默认工作路径
+  pthread->cwd_inode_nr = 0;  // 以根目录作为默认工作路径
+  pthread->parent_pid = -1;
   pthread->stack_magic = STACK_MAGIC;  // 魔数
 }
 
@@ -222,6 +223,7 @@ int32_t pcb_fd_install(uint32_t fd_idx) {
   }
   return -1;
 }
+pid_t fork_pid(void) { return allocate_pid(); }
 
 /* 初始化线程环境 */
 void thread_init(void) {
@@ -229,7 +231,11 @@ void thread_init(void) {
   list_init(&thread_ready_list);
   list_init(&thread_all_list);
   lock_init(&pid_lock);
+  /* 先创建第一个用户进程:init */
+  process_execute(init, "init");
+  /* 将当前 main 函数创建为线程 */
   make_main_thread();
+  /* 创建 idle 线程 */
   idle_thread = thread_start("idle", 10, idle, NULL);
   console_write("thread_init done\n");
 }

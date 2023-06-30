@@ -1,6 +1,7 @@
 #include "syscall_init.h"
 
 #include "console.h"
+#include "fork.h"
 #include "fs.h"
 #include "memory.h"
 #include "print.h"
@@ -32,5 +33,6 @@ void syscall_init(void) {
   syscall_table[SYS_READDIR] = sys_readdir;
   syscall_table[SYS_REWINDDIR] = sys_rewinddir;
   syscall_table[SYS_RMDIR] = sys_rmdir;
+  syscall_table[SYS_FORK] = sys_fork;
   console_write("syscall_init done\n");
 }

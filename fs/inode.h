@@ -3,7 +3,7 @@
 #include "global.h"
 #include "ide.h"
 #include "list.h"
-#include "types.h"
+#include "stdint.h"
 /*inode结构*/
 struct inode {
   uint32_t i_no;    // inode编号

@@ -2,7 +2,7 @@
 #define THREAD_SYNC
 #include "list.h"
 #include "thread.h"
-#include "types.h"
+#include "stdint.h"
 
 /*信号量结构*/
 struct semaphore {

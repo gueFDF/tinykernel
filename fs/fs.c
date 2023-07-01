@@ -7,13 +7,13 @@
 #include "inode.h"
 #include "list.h"
 #include "memory.h"
-#include "print.h"
+#include "console.h"
 #include "stdio_kernel.h"
 #include "string.h"
 #include "super_block.h"
 #include "syscall_init.h"
 #include "thread.h"
-#include "types.h"
+#include "stdint.h"
 
 struct partition* cur_part;  // 默认情况下操作的是哪一个分区
 
@@ -455,7 +455,7 @@ int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {
   if (fd == stdout_no) {
     char tmp_buf[1024] = {0};
     memcpy(tmp_buf, buf, count);
-    print_str(tmp_buf);
+    console_put_str(tmp_buf);
     return count;
   }
 
@@ -466,7 +466,7 @@ int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {
     uint32_t bytes_written = file_write(wr_file, buf, count);
     return bytes_written;
   } else {
-    print_str(
+    console_put_str(
         "sys_write: not allowed to write file without flag O_RDWR or "
         "O_WRONLY\n");
     return -1;

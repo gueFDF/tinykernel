@@ -2,7 +2,7 @@
 #define KERNEL_MEMORY
 #include "bitmap.h"
 #include "list.h"
-#include "types.h"
+#include "stdint.h"
 #define PG_SIZE 4096  // 一个物理页的大小
 
 /*虚拟地址池，用于虚拟地址管理*/

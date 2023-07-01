@@ -1,13 +1,13 @@
 #include "syscall_init.h"
 
-#include "console.h"
+#include "print.h"
 #include "fork.h"
 #include "fs.h"
 #include "memory.h"
-#include "print.h"
+#include "console.h"
 #include "string.h"
 #include "thread.h"
-#include "types.h"
+#include "stdint.h"
 #define syscall_nr 32
 typedef void* syscall;
 syscall syscall_table[syscall_nr];
@@ -17,7 +17,7 @@ uint32_t sys_getpid(void) { return runing_thread()->pid; }
 
 /*初始化系统调用*/
 void syscall_init(void) {
-  console_write("syscall_init start\n");
+  put_str("syscall_init start\n");
   syscall_table[SYS_GETPID] = sys_getpid;
   syscall_table[SYS_WRITE] = sys_write;
   syscall_table[SYS_MALLOC] = sys_malloc;
@@ -34,5 +34,5 @@ void syscall_init(void) {
   syscall_table[SYS_REWINDDIR] = sys_rewinddir;
   syscall_table[SYS_RMDIR] = sys_rmdir;
   syscall_table[SYS_FORK] = sys_fork;
-  console_write("syscall_init done\n");
+  put_str("syscall_init done\n");
 }

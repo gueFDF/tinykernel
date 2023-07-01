@@ -1,7 +1,7 @@
 #ifndef FS_FILE
 #define FS_FILE
 #include "fs.h"
-#include "types.h"
+#include "stdint.h"
 /*文件结构*/
 struct file {
   uint32_t fd_pos;  // 当前文件操作的偏移地址，-1表示最大偏移量

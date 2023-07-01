@@ -1,7 +1,7 @@
 #include "keyboard.h"
 
-#include "common.h"
-#include "console.h"
+#include "io.h"
+#include "print.h"
 #include "global.h"
 #include "interrupt.h"
 #include "ioqueue.h"
@@ -168,7 +168,7 @@ static void intr_keyboard_handler(void) {
     /* 只处理ascii码不为0的键 */
     if (cur_char) {
       if (!ioq_full(&kbd_buf)) {
-        console_write_char(cur_char);  // 临时的
+        put_char(cur_char);  // 临时的
         ioq_putchar(&kbd_buf, cur_char);
       }
       return;
@@ -184,14 +184,14 @@ static void intr_keyboard_handler(void) {
       caps_lock_status = !caps_lock_status;
     }
   } else {
-    console_write("unknow key\n");
+    put_str("unknow key\n");
   }
 }
 
 /*键盘初始化*/
 void keyboard_init() {
-  console_write("keyboard init start\n");
+  put_str("keyboard init start\n");
   register_handler(0x21, intr_keyboard_handler);
-  console_write("keyboard init done\n");
+  put_str("keyboard init done\n");
   return;
 }

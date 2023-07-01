@@ -4,7 +4,7 @@
 #include "bitmap.h"
 #include "list.h"
 #include "sync.h"
-#include "types.h"
+#include "stdint.h"
 struct partition {
   uint32_t start_lba;          // 起始扇区
   uint32_t sec_cnt;            // 扇区数

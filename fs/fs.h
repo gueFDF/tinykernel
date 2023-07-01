@@ -1,7 +1,7 @@
 #ifndef FS_FS
 #define FS_FS
 #include "ide.h"
-#include "types.h"
+#include "stdint.h"
 // 每个分区所支持最大创建的文件数
 #define MAX_FILES_PER_PART 4096
 

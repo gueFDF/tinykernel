@@ -1,15 +1,15 @@
 #include "thread.h"
 
-#include "console.h"
 #include "debug.h"
 #include "global.h"
 #include "interrupt.h"
 #include "list.h"
 #include "memory.h"
+#include "print.h"
 #include "process.h"
+#include "stdint.h"
 #include "string.h"
 #include "sync.h"
-#include "types.h"
 
 struct task_struct* main_thread;      // 主线程PCB
 struct task_struct* idle_thread;      // ide线程
@@ -59,7 +59,7 @@ static pid_t allocate_pid(void) {
 void thread_create(struct task_struct* pthread, thread_func function,
                    void* func_arg) {
   // 先预留中断使用栈的空间
-  //  pthread->self_kstack -= sizeof(struct intr_stack);
+  pthread->self_kstack -= sizeof(struct intr_stack);
   // 再预留线程栈使用的空间
   pthread->self_kstack -= sizeof(struct thread_stack);
   struct thread_stack* kthread_stack =
@@ -201,7 +201,7 @@ void thread_unblock(struct task_struct* pthread) {
 
 /*主动让出CPU(重新入队等待下一轮调度)*/
 void thread_yield(void) {
-  console_write("thread_init start\n");
+  put_str("thread_init start\n");
   struct task_struct* cur = runing_thread();
   enum intr_status old_status = intr_disable();
   ASSERT(!elem_find(&thread_ready_list, &cur->general_tag));
@@ -227,7 +227,7 @@ pid_t fork_pid(void) { return allocate_pid(); }
 
 /* 初始化线程环境 */
 void thread_init(void) {
-  console_write("thread_init start\n");
+  put_str("thread_init start\n");
   list_init(&thread_ready_list);
   list_init(&thread_all_list);
   lock_init(&pid_lock);
@@ -237,5 +237,5 @@ void thread_init(void) {
   make_main_thread();
   /* 创建 idle 线程 */
   idle_thread = thread_start("idle", 10, idle, NULL);
-  console_write("thread_init done\n");
+  put_str("thread_init done\n");
 }

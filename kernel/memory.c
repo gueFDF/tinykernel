@@ -1,7 +1,7 @@
 #include "memory.h"
 
 #include "bitmap.h"
-#include "console.h"
+#include "print.h"
 #include "debug.h"
 #include "global.h"
 #include "interrupt.h"
@@ -43,7 +43,7 @@ struct virtual_addr kernel_vaddr;  // 此结构用来给内核分配虚拟地址
 
 /*初始化内存池*/
 static void mem_pool_init(uint32_t all_mem) {
-  console_write(" mem_pool_init start\n");
+  put_str(" mem_pool_init start\n");
   //(一个目录表+第一个物理页+第 769~1022 个页目录项共指向 254 个页表=256)
   uint32_t page_table_size = PG_SIZE * 256;
   // 已经使用的内存，低端1M+已经映射的页表占用的
@@ -73,17 +73,17 @@ static void mem_pool_init(uint32_t all_mem) {
   user_pool.pool_bitmap.bits = uint32ToVoidptr(MEM_BITMAP_BASE + kbm_length);
 
   /*输出内存池信息*/
-  console_write("  kernel_pool_bitmap_start:");
-  console_write_hex(voidptrTouint32((void*)(kernel_pool.pool_bitmap.bits)));
-  console_write("  kernel_pool_phy_addr_start:");
-  console_write_hex(kernel_pool.phy_addr_start);
-  console_write("\n");
+  put_str("  kernel_pool_bitmap_start:");
+  put_int(voidptrTouint32((void*)(kernel_pool.pool_bitmap.bits)));
+  put_str("  kernel_pool_phy_addr_start:");
+  put_int(kernel_pool.phy_addr_start);
+  put_str("\n");
 
-  console_write("  user_pool_bitmap_start:");
-  console_write_hex(voidptrTouint32((void*)(user_pool.pool_bitmap.bits)));
-  console_write("  user_pool_phy_addr_start:");
-  console_write_hex(user_pool.phy_addr_start);
-  console_write("\n");
+  put_str("  user_pool_bitmap_start:");
+  put_int(voidptrTouint32((void*)(user_pool.pool_bitmap.bits)));
+  put_str("  user_pool_phy_addr_start:");
+  put_int(user_pool.phy_addr_start);
+  put_str("\n");
 
   // 初始化位图
   bitmap_init(&kernel_pool.pool_bitmap);
@@ -100,11 +100,11 @@ static void mem_pool_init(uint32_t all_mem) {
   lock_init(&kernel_pool.lock);
   lock_init(&user_pool.lock);
 
-  console_write("  kernel_vaddr_bitmap_start:");
-  console_write_hex(voidptrTouint32((void*)(kernel_vaddr.vaddr_bitmap.bits)));
-  console_write("\n");
+  put_str("  kernel_vaddr_bitmap_start:");
+  put_int(voidptrTouint32((void*)(kernel_vaddr.vaddr_bitmap.bits)));
+  put_str("\n");
 
-  console_write(" mem_pool_init done\n");
+  put_str(" mem_pool_init done\n");
 }
 
 // 在pf标志的虚拟内存池中申请pg_cnt个虚拟页(虚拟地址的空间要保证连续，所以提供该功能)
@@ -541,9 +541,9 @@ void* get_a_page_without_opvaddrbitmap(enum pool_flags pf, uint32_t vaddr) {
 }
 
 void mem_init(void) {
-  console_write("mem_init start\n");
+  put_str("mem_init start\n");
   uint32_t mem_bytes_total = (*(uint32_t*)(0xb00));
   mem_pool_init(mem_bytes_total);  // 初始化内存池
   block_desc_init(k_block_descs);
-  console_write("mem_init done\n");
+  put_str("mem_init done\n");
 }

@@ -1,7 +1,7 @@
-#ifndef KERNEL_COMMON
-#define KERNEL_COMMON
+#ifndef LIB_KERNEL_IO
+#define LIB_KERNEL_IO
 
-#include "types.h"
+#include "stdint.h"
 
 // 端口写一个字节
 void outb(uint16_t port, uint8_t value);
@@ -17,4 +17,4 @@ void outsw(uint16_t port, const void* addr, uint32_t word_cnt);
 
 /* 将从端口port读入的word_cnt个字写入addr */
 void insw(uint16_t port, void* addr, uint32_t word_cnt);
-#endif /* KERNEL_COMMON */
+#endif /* LIB_KERNEL_IO */

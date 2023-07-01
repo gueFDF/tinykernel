@@ -1,9 +1,9 @@
 #include "interrupt.h"
 
-#include "common.h"
-#include "console.h"
+#include "io.h"
+#include "print.h"
 #include "global.h"
-#include "types.h"
+#include "stdint.h"
 /*中断门描述符结构体*/
 struct gate_desc {
   uint16_t func_offset_low_word;  // 中断处理程序在目标代码段内的偏移量(低16位)
@@ -46,7 +46,7 @@ static void pic_init(void) {
   outb(PIC_M_DATA, 0xf8);
   outb(PIC_S_DATA, 0xbf);
 
-  console_write("   pic_init done\n");
+  put_str("   pic_init done\n");
 }
 
 /*创建中断门描述符*/
@@ -71,7 +71,7 @@ static void idt_desc_init(void) {
   // 因为该中断是由用户触发，所以中断门dpl要为3,不然会触发GP异常
   make_idt_desc(&idt[lastindex], IDT_DESC_ATTR_DPL3, syscall_handler);
 
-  console_write("   idt_desc_init done\n");
+  put_str("   idt_desc_init done\n");
 }
 
 /* 通用的中断处理函数,一般用在异常出现时的处理 */
@@ -81,18 +81,18 @@ static void general_intr_handler(uint8_t vec_nr) {
     return;  // 伪中断忽略处理
   }
   // 重置光标
-  console_write("!!!!!   excetion message begin   !!!!!\n");
-  console_write("        ");
-  console_write(intr_name[vec_nr]);
+  put_str("!!!!!   excetion message begin   !!!!!\n");
+  put_str("        ");
+  put_str(intr_name[vec_nr]);
   if (vec_nr == 14) {  // 缺页异常
     int page_fault_vaddr = 0;
     asm("movl %%cr2 ,%0"
         : "=r"(page_fault_vaddr));  // 获取触发缺页异常的虚拟地址
-    console_write("\npage fault addr is ");
-    console_write_hex(page_fault_vaddr);
+    put_str("\npage fault addr is ");
+    put_int(page_fault_vaddr);
   }
 
-  console_write("\n!!!!!   excetion message end    !!!!!\n");
+  put_str("\n!!!!!   excetion message end    !!!!!\n");
   while (1)
     ;  // 能进入中断处理程序就表示已经处在关中断情况下
        // 不会出现调度进程的情况。故下面的死循环不会再被中断
@@ -129,7 +129,7 @@ static void exception_init(void) {
 
 /*完成有关中断的所有初始化工作*/
 void idt_init() {
-  console_write("idt_init start\n");
+  put_str("idt_init start\n");
   idt_desc_init();
   exception_init();
   pic_init();  // 初始化 8259A
@@ -141,7 +141,7 @@ void idt_init() {
 
   asm volatile("lidt %0" : : "m"(idt_operand));
 
-  console_write("idt_init done\n");
+  put_str("idt_init done\n");
 }
 
 /*开启中断并返回中断前的状态*/

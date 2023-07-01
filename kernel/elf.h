@@ -1,6 +1,6 @@
 #ifndef __ELF_H
 #define __ELF_H
-#include "types.h"
+#include "stdint.h"
 
 #define EI_NIDENT (16)
 // elf header

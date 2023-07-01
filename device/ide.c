@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#include "common.h"
+#include "io.h"
 #include "debug.h"
 #include "interrupt.h"
 #include "memory.h"

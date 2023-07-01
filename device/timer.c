@@ -1,7 +1,7 @@
 #include "timer.h"
 
-#include "common.h"
-#include "console.h"
+#include "io.h"
+#include "print.h"
 #include "debug.h"
 #include "interrupt.h"
 #include "thread.h"
@@ -38,13 +38,13 @@ static void intr_timer_handler(void) {
 
 // 初始化PIT8253
 void timer_init() {
-  console_write("time_init start\n");
+  put_str("time_init start\n");
   /* 设置 8253 的定时周期,也就是发中断的周期 */
   frequency_set(COUNTER0_PORT, COUNTER0_NO, READ_WRITE_LATCH, COUNTER_MODE,
                 COUNTER0_VALUE);
 
   register_handler(0x20, intr_timer_handler);  // 注册中断处理函数
-  console_write("timer_init done\n");
+  put_str("timer_init done\n");
 }
 
 /* 以 tick 为单位的 sleep,任何时间形式的 sleep 会转换此 ticks 形式 */

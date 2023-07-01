@@ -1,5 +1,5 @@
-#ifndef KERNEL_TYPES
-#define KERNEL_TYPES
+#ifndef LIB_STDINT
+#define LIB_STDINT
 typedef signed char int8_t;
 typedef signed short int int16_t;
 typedef signed int int32_t;
@@ -15,4 +15,4 @@ typedef long int intptr_t;
 uint32_t voidptrTouint32(void* value);
 
 void* uint32ToVoidptr(uint32_t value);
-#endif /* KERNEL_TYPES */
+#endif /* LIB_STDINT */

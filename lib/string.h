@@ -1,7 +1,7 @@
 #ifndef KERNEL_STRING
 #define KERNEL_STRING
 
-#include "types.h"
+#include "stdint.h"
 
 void memcpy(void *dest, const void *src, uint32_t len);
 

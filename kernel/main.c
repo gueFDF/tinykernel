@@ -1,11 +1,11 @@
-#include "console.h"
+#include "print.h"
 #include "debug.h"
 #include "dir.h"
 #include "fs.h"
 #include "init.h"
 #include "interrupt.h"
 #include "memory.h"
-#include "print.h"
+#include "console.h"
 #include "process.h"
 #include "stdio.h"
 #include "stdio_kernel.h"
@@ -20,7 +20,7 @@ void u_prog_a(void);
 void u_prog_b(void);
 
 int main(void) {
-  console_write("I am kernel\n");
+  put_str("I am kernel\n");
   init_all();
   intr_enable();
   process_execute(u_prog_a, "u_prog_a");

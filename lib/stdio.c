@@ -1,7 +1,7 @@
 #include "stdio.h"
 
 #include "global.h"
-#include "print.h"
+#include "console.h"
 #include "string.h"
 #include "syscall.h"
 

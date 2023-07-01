@@ -1,6 +1,6 @@
 #include "sync.h"
 
-#include "console.h"
+#include "print.h"
 #include "debug.h"
 #include "interrupt.h"
 #include "list.h"

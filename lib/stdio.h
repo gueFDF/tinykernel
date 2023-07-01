@@ -1,6 +1,6 @@
 #ifndef LIB_STDIO
 #define LIB_STDIO
-#include "types.h"
+#include "stdint.h"
 typedef char* va_list;
 
 #define va_start(ap, v) ap = (va_list)&v  // 把ap指向第一个固定参数v

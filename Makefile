@@ -16,33 +16,27 @@ BOCHS_GDB_FLAG='gdbstub:enabled=1,port=1234,text_base=0,data_base=0,bss_base=0'
 
 
 K_OBJS=$K/main.o \
-	   $K/common.o \
-	   $K/console.o \
-	   $K/string.o \
-	   $K/types.o \
 	   $K/init.o \
 	   $K/interrupt.o\
 	   $K/debug.o \
-	   $K/bitmap.o \
-	   $K/memory.o \
-	   $K/list.o \
-	   $K/print.o
+	   $K/memory.o 
 
 
 D_OBJS=$D/keyboard.o \
        $D/timer.o  \
 	   $D/ioqueue.o \
-	   $D/ide.o
+	   $D/ide.o \
+	   $D/console.o
 	   
 
 T_OBJS=$T/sync.o \
-	   $T/thread.o \
-	   $T/fork.o
+	   $T/thread.o 
 
 
 U_OBJS=$U/tss.o \
 	   $U/process.o \
-	   $U/syscall_init.o 
+	   $U/syscall_init.o  \
+	   $U/fork.o
 
 
 
@@ -53,11 +47,16 @@ F_OBJS=$F/fs.o \
 
 
 
-L_OBJS=$L/stdio.o
+L_OBJS=$L/stdio.o \
+       $L/stdint.o \
+	   $L/string.o 
 
 LU_OBJS=${LU}/syscall.o
 
-LK_OBJS=${LK}/stdio_kernel.o 
+LK_OBJS=${LK}/stdio_kernel.o  \
+		${LK}/bitmap.o \
+		${LK}/list.o \
+		${LK}/io.o
 	
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
 -nostdinc -fno-pic -fno-builtin -fno-stack-protector -mno-sse -g
@@ -81,7 +80,8 @@ build:${OBJS}
 	nasm -I $B/include -o $B/loader.bin $B/loader.asm 
 	nasm -f elf -o $K/kernel.o $K/kernel.asm 
 	nasm -f elf -o $T/switch.o $T/switch.asm
-	ld -m elf_i386 -T kernel.ld -o kernel.bin ${OBJS} $K/kernel.o  $T/switch.o
+	nasm -f elf -o ${LK}/print.o ${LK}/print.asm
+	ld -m elf_i386 -T kernel.ld -o kernel.bin ${OBJS} $K/kernel.o  $T/switch.o ${LK}/print.o
 
 $K/%.o:$K/%.c 
 	gcc ${include} ${GCC_FLAGS} -o $@ $^ 

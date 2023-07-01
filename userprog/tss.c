@@ -1,10 +1,10 @@
 #include "tss.h"
 
-#include "console.h"
+#include "print.h"
 #include "global.h"
 #include "memory.h"
 #include "string.h"
-#include "types.h"
+#include "stdint.h"
 
 /* 任务状态段 tss 结构 */
 struct tss {
@@ -61,7 +61,7 @@ static struct gdt_desc make_gdt_desc(uint32_t* desc_addr, uint32_t limit,
 
 /* 在 gdt 中创建 tss 并重新加载 gdt */
 void tss_init() {
-  console_write("tss_init start\n");
+  put_str("tss_init start\n");
   uint32_t tss_size = sizeof(tss);
   memset(&tss, 0, tss_size);
   tss.ss0 = SELECTOR_K_STACK;
@@ -85,6 +85,6 @@ void tss_init() {
   asm volatile("lgdt %0" ::"m"(gdt_operand));
   asm volatile("ltr %w0" ::"r"(SELECTOR_TSS));
 
-  console_write("tss_init and ltr done\n");
+  put_str("tss_init and ltr done\n");
   return;
 }

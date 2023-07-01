@@ -1,6 +1,6 @@
 #include "list.h"
 
-#include "console.h"
+#include "print.h"
 #include "interrupt.h"
 // 初始化
 void list_init(struct list* list) {
@@ -96,12 +96,12 @@ struct list_elem* list_traversal(struct list* plist, function func, int arg) {
 void print_ele(struct list* plist) {
   int count = list_len(plist);
   struct list_elem* elem = plist->head.next;
-  console_write("elem count: ");
-  console_write_dec(count);
-  console_write_char('\n');
+  put_str("elem count: ");
+  put_int(count);
+  put_char('\n');
   for (int i = 0; i < count; i++) {
-    console_write_hex(voidptrTouint32(elem));
-    console_write_char('\n');
+    put_int(voidptrTouint32(elem));
+    put_char('\n');
     elem = elem->next;
   }
 }

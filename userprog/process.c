@@ -1,12 +1,12 @@
 #include "process.h"
 
 #include "bitmap.h"
-#include "console.h"
+#include "print.h"
 #include "debug.h"
 #include "global.h"
 #include "interrupt.h"
 #include "memory.h"
-#include "print.h"
+#include "console.h"
 #include "string.h"
 #include "tss.h"
 /*构建用户进程初始化上下文*/
@@ -67,7 +67,7 @@ uint32_t* create_page_dir(void) {
   /* 用户进程的页表不能让用户直接访问到,所以在内核空间来申请 */
   uint32_t* page_dir_vaddr = get_kernel_pages(1);
   if (page_dir_vaddr == NULL) {
-    print_str("create_page_dir: get_kernel_page failed!");
+    console_put_str("create_page_dir: get_kernel_page failed!");
     return NULL;
   }
   // 1.复制页表

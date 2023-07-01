@@ -1,6 +1,6 @@
 #ifndef FS_SUPER_BLOCK
 #define FS_SUPER_BLOCK
-#include "types.h"
+#include "stdint.h"
 /*超级块*/
 struct super_block {
   uint32_t magic;          // 用来标识文件系统类型

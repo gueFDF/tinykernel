@@ -3,7 +3,7 @@
 
 #include "list.h"
 #include "memory.h"
-#include "types.h"
+#include "stdint.h"
 
 #define MAX_FILES_OPEN_PER_PROC 8  // 每个进程允许打开文件的最大数量
 typedef void thread_func(void*);

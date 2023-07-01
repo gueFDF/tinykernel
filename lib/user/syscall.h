@@ -1,7 +1,7 @@
 #ifndef LIB_USER_SYSCALL
 #define LIB_USER_SYSCALL
 
-#include <types.h>
+#include <stdint.h>
 typedef int16_t pid_t;
 
 enum SYSCALL_NR {

@@ -2,7 +2,7 @@
 #define DEVICE_IOQUEUE
 #include "sync.h"
 #include "thread.h"
-#include "types.h"
+#include "stdint.h"
 
 #define bufsize 64
 

@@ -1,6 +1,6 @@
 #ifndef USERPROG_SYSCALL_INIT
 #define USERPROG_SYSCALL_INIT
-#include "types.h"
+#include "stdint.h"
 #define SYS_GETPID 0
 #define SYS_WRITE 1
 #define SYS_MALLOC 2

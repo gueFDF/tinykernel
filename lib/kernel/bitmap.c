@@ -1,8 +1,8 @@
 #include "bitmap.h"
 
-#include "console.h"
 #include "debug.h"
 #include "interrupt.h"
+#include "print.h"
 #include "string.h"
 
 /*将位图btmap初始化*/

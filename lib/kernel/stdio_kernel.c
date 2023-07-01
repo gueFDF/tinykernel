@@ -1,4 +1,4 @@
-#include "print.h"
+#include "console.h"
 #include "stdio.h"
 #include "global.h"
 
@@ -9,5 +9,5 @@ void printk(const char* format, ...) {
   char buf[1024] = {0};
   vsprintf(buf, format, args);
   va_end(args);
-  print_str(buf);
+  console_put_str(buf);
 }

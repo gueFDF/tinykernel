@@ -17,6 +17,8 @@
 #define SYS_REWINDDIR 13
 #define SYS_RMDIR 14
 #define SYS_FORK 15
+#define SYS_PUTCHAR 16
+#define SYS_CLEAR 17
 void syscall_init(void);
 uint32_t sys_getpid(void);
 #endif /* USERPROG_SYSCALL_INIT */

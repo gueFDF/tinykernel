@@ -2,6 +2,8 @@
 #define LIB_USER_SYSCALL
 
 #include <stdint.h>
+
+#include "print.h"
 typedef int16_t pid_t;
 
 enum SYSCALL_NR {
@@ -20,7 +22,9 @@ enum SYSCALL_NR {
   SYS_READDIR,
   SYS_REWINDDIR,
   SYS_RMDIR,
-  SYS_FORK
+  SYS_FORK,
+  SYS_PUTCHAR,
+  SYS_CLEAR
 };
 
 uint32_t getpid(void);
@@ -39,4 +43,6 @@ struct dir_entry* readdir(struct dir* dir);
 void rewinddir(struct dir* dir);
 int32_t rmdir(const char* pathname);
 pid_t fork();
+void putchar(uint8_t char_asci);
+void clear();
 #endif /* LIB_USER_SYSCALL */

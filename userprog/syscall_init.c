@@ -34,5 +34,7 @@ void syscall_init(void) {
   syscall_table[SYS_REWINDDIR] = sys_rewinddir;
   syscall_table[SYS_RMDIR] = sys_rmdir;
   syscall_table[SYS_FORK] = sys_fork;
+  syscall_table[SYS_PUTCHAR] = sys_putchar;
+  syscall_table[SYS_CLOSE] = cls_screen;
   put_str("syscall_init done\n");
 }

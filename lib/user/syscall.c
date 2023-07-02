@@ -84,3 +84,5 @@ void rewinddir(struct dir* dir) { _syscall1(SYS_REWINDDIR, dir); }
 int32_t rmdir(const char* pathname) { return _syscall1(SYS_RMDIR, pathname); }
 
 pid_t fork() { return _syscall0(SYS_FORK); }
+void putchar(uint8_t char_asci) { _syscall1(SYS_PUTCHAR, char_asci); }
+void clear() { _syscall0(SYS_CLEAR); }

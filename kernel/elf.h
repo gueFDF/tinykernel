@@ -1,5 +1,5 @@
-#ifndef __ELF_H
-#define __ELF_H
+#ifndef KERNEL_ELF
+#define KERNEL_ELF
 #include "stdint.h"
 
 #define EI_NIDENT (16)
@@ -32,4 +32,4 @@ struct program_header {
   uint32_t p_align; /* 指明本段在文件和内存中的对齐方式(对齐或不对齐) */
 };
 
-#endif
+#endif /* KERNEL_ELF */

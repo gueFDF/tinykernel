@@ -1,10 +1,10 @@
 #include "keyboard.h"
 
-#include "io.h"
-#include "print.h"
 #include "global.h"
 #include "interrupt.h"
+#include "io.h"
 #include "ioqueue.h"
+#include "print.h"
 
 #define KBD_BUF_PORT 0x60  // 键盘 buffer 寄存器端口号为 0x60
 #define esc '\033'
@@ -110,7 +110,7 @@ static char keymap[][2] = {
 /*键盘中断处理程序*/
 static void intr_keyboard_handler(void) {
   // 判断上次中断，是否有按下下面三个键
-  // bool ctrl_down_last = ctrl_status; /*后面会用到*/
+  bool ctrl_down_last = ctrl_status; /*后面会用到*/
   bool shift_down_last = shift_status;
   bool caps_down_last = caps_lock_status;
 
@@ -167,14 +167,17 @@ static void intr_keyboard_handler(void) {
 
     /* 只处理ascii码不为0的键 */
     if (cur_char) {
+      if ((ctrl_down_last && cur_char == 'l') ||
+          (ctrl_down_last && cur_char == 'u')) {
+        cur_char -= 'a';
+      }
       if (!ioq_full(&kbd_buf)) {
-        put_char(cur_char);  // 临时的
         ioq_putchar(&kbd_buf, cur_char);
       }
       return;
     }
     /* 记录本次是否按下了下面几类控制键之一,供下次键入时判断组合键 */
-    if (scancode == ctrl_l_make || scancode == ctrl_l_make) {
+    if (scancode == ctrl_l_make || scancode == ctrl_r_make) {
       ctrl_status = true;
     } else if (scancode == shift_l_make || scancode == shift_r_make) {
       shift_status = true;
@@ -191,6 +194,7 @@ static void intr_keyboard_handler(void) {
 /*键盘初始化*/
 void keyboard_init() {
   put_str("keyboard init start\n");
+  ioqueue_init(&kbd_buf);
   register_handler(0x21, intr_keyboard_handler);
   put_str("keyboard init done\n");
   return;

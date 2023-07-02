@@ -7,6 +7,7 @@
 #include "memory.h"
 #include "print.h"
 #include "process.h"
+#include "shell.h"
 #include "stdio.h"
 #include "stdio_kernel.h"
 #include "string.h"
@@ -23,6 +24,8 @@ int main(void) {
   put_str("I am kernel\n");
   init_all();
   intr_enable();
+  cls_screen();
+  console_put_str("[rabbit@localhost /]$ ");
   while (1)
     ;
   return 0;
@@ -56,9 +59,10 @@ void u_prog_b(void) {
 void init(void) {
   uint32_t ret_pid = fork();
   if (ret_pid) {
-    printf("i am father, my pid is %d,child pid is %d\n", getpid(), ret_pid);
+    while (1)
+      ;
   } else {
-    printf("i am child, my pid is %d, ret pid is %d\n", getpid(), ret_pid);
+    my_shell();
   }
   while (1)
     ;

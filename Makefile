@@ -5,6 +5,7 @@ T=thread
 U=userprog
 L=lib
 F=fs
+S=shell
 LU=lib/user
 LK=lib/kernel
 
@@ -46,6 +47,7 @@ F_OBJS=$F/fs.o \
 	   $F/dir.o  \
 	   $F/file.o
 
+S_OBJS=$S/shell.o
 
 
 L_OBJS=$L/stdio.o \
@@ -60,6 +62,10 @@ LK_OBJS=${LK}/stdio_kernel.o  \
 		${LK}/io.o \
 		${LK}/print.o
 	
+
+
+
+	
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
 -nostdinc  -fno-builtin -fno-stack-protector -mno-sse -g 
 
@@ -70,9 +76,10 @@ OBJS=${K_OBJS}   \
 	 ${LK_OBJS}  \
 	 ${LU_OBJS}  \
 	 ${L_OBJS}  \
-	 ${F_OBJS}
+	 ${F_OBJS} \
+	 ${S_OBJS}
 
-include= -I $K -I $D -I $T -I $U -I $L -I $F -I ${LK} -I ${LU} 
+include= -I $K -I $D -I $T -I $U -I $L -I $F -I $S -I ${LK} -I ${LU} 
 
 
 
@@ -100,6 +107,9 @@ $L/%.o:$L/%.c
 	gcc ${include} ${GCC_FLAGS} -o $@ $^
 	
 $F/%.o:$F/%.c
+	gcc ${include} ${GCC_FLAGS} -o $@ $^
+
+$S/%.o:$S/%.c
 	gcc ${include} ${GCC_FLAGS} -o $@ $^
 
 ${LK}/%.o:${LK}/%.c

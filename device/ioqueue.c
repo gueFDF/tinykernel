@@ -71,7 +71,7 @@ void ioq_putchar(struct ioqueue* ioq, char byte) {
   ioq->buf[ioq->head] = byte;
   ioq->head = next_pos(ioq->head);
 
-  if (ioq->producer != NULL) {
+  if (ioq->consumer != NULL) {
     wakeup(&ioq->consumer);  // 唤醒消费者
   }
 }

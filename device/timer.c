@@ -1,9 +1,9 @@
 #include "timer.h"
 
-#include "io.h"
-#include "print.h"
 #include "debug.h"
 #include "interrupt.h"
+#include "io.h"
+#include "print.h"
 #include "thread.h"
 
 #define IRQ0_FREQUENCY 100                            // 一秒一百次
@@ -24,7 +24,7 @@ static void frequency_set(uint8_t counter_port, uint8_t counter_on, uint8_t rwl,
 
 /*时钟中断处理函数*/
 static void intr_timer_handler(void) {
-  struct task_struct* cur_thread = runing_thread();
+  struct task_struct* cur_thread = running_thread();
   ASSERT(cur_thread->stack_magic == STACK_MAGIC);  // 检查PCB栈是否溢出
 
   cur_thread->elapsed_ticks++;  // 记录次线程占用CPU的时间

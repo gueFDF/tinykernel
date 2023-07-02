@@ -1,15 +1,15 @@
 #ifndef DEVICE_IOQUEUE
 #define DEVICE_IOQUEUE
+#include "stdint.h"
 #include "sync.h"
 #include "thread.h"
-#include "stdint.h"
 
 #define bufsize 64
 
 /*环形队列*/
 struct ioqueue {
   struct lock lock;
-  struct task_struct* producter;
+  struct task_struct* producer;
   struct task_struct* consumer;
 
   char buf[bufsize];  // 缓冲区

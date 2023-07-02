@@ -1,19 +1,19 @@
 #include "syscall_init.h"
 
-#include "print.h"
+#include "console.h"
 #include "fork.h"
 #include "fs.h"
 #include "memory.h"
-#include "console.h"
+#include "print.h"
+#include "stdint.h"
 #include "string.h"
 #include "thread.h"
-#include "stdint.h"
 #define syscall_nr 32
 typedef void* syscall;
 syscall syscall_table[syscall_nr];
 
 // 获取当前任务的pid
-uint32_t sys_getpid(void) { return runing_thread()->pid; }
+uint32_t sys_getpid(void) { return running_thread()->pid; }
 
 /*初始化系统调用*/
 void syscall_init(void) {

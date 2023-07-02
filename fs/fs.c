@@ -1,5 +1,6 @@
 #include "fs.h"
 
+#include "console.h"
 #include "debug.h"
 #include "dir.h"
 #include "file.h"
@@ -7,13 +8,12 @@
 #include "inode.h"
 #include "list.h"
 #include "memory.h"
-#include "console.h"
+#include "stdint.h"
 #include "stdio_kernel.h"
 #include "string.h"
 #include "super_block.h"
 #include "syscall_init.h"
 #include "thread.h"
-#include "stdint.h"
 
 struct partition* cur_part;  // 默认情况下操作的是哪一个分区
 
@@ -424,7 +424,7 @@ void filesys_init() {
 
 // 将fd转换为文件表的下标
 static uint32_t fd_local2global(uint32_t local_fd) {
-  struct task_struct* cur_thred = runing_thread();
+  struct task_struct* cur_thred = running_thread();
   int32_t globa_idx = cur_thred->fd_table[local_fd];
   ASSERT(globa_idx >= 0 && globa_idx < MAX_FILES_OPEN_PER_PROC);
 
@@ -441,7 +441,7 @@ int32_t sys_close(int32_t fd) {
 
     ret = file_close(&file_table[_fd]);
 
-    runing_thread()->fd_table[fd] = -1;  // 使该文件描述符位可用
+    running_thread()->fd_table[fd] = -1;  // 使该文件描述符位可用
   }
 
   return ret;
@@ -847,7 +847,7 @@ char* sys_getcwd(char* buf, uint32_t size) {
     return NULL;
   }
 
-  struct task_struct* cur_thread = runing_thread();
+  struct task_struct* cur_thread = running_thread();
   int32_t parent_inode_nr = 0;
   int32_t child_inode_nr = cur_thread->cwd_inode_nr;
   ASSERT(child_inode_nr >= 0 && child_inode_nr < 4096);
@@ -893,7 +893,7 @@ int32_t sys_chdir(const char* path) {
   int inode_no = search_file(path, &search_record);
   if (inode_no != -1) {
     if (search_record.file_type == FT_DIRECTORY) {
-      runing_thread()->cwd_inode_nr = inode_no;
+      running_thread()->cwd_inode_nr = inode_no;
       ret = 0;
     } else {
       printk("sys_chdir: %s is regular file or other!\n", path);

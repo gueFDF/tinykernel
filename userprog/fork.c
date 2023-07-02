@@ -158,7 +158,7 @@ static int32_t copy_process(struct task_struct* child_thread,
 }
 
 pid_t sys_fork(void) {
-  struct task_struct* parent_thread = runing_thread();
+  struct task_struct* parent_thread = running_thread();
   struct task_struct* child_thread = get_kernel_pages(1);
 
   if (child_thread == NULL) {

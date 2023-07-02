@@ -1,13 +1,13 @@
 #include "sync.h"
 
-#include "print.h"
 #include "debug.h"
 #include "interrupt.h"
 #include "list.h"
+#include "print.h"
 #include "thread.h"
 
 /*初始化信号量*/
-void seam_init(struct semaphore* psema, uint8_t value) {
+void sema_init(struct semaphore* psema, uint8_t value) {
   psema->value = value;
   list_init(&psema->waiters);
 }
@@ -16,7 +16,7 @@ void seam_init(struct semaphore* psema, uint8_t value) {
 void lock_init(struct lock* plock) {
   plock->holder = NULL;
   plock->holder_repeat_nr = 0;
-  seam_init(&plock->semaphore, 1);
+  sema_init(&plock->semaphore, 1);
 }
 
 /*信号量down操作*/
@@ -26,11 +26,11 @@ void sema_down(struct semaphore* psema) {
   while (psema->value == 0) {
     // 此处要使用while,唤醒后再次判断(因为锁可能再次被抢用)
     // 若 value 为 0,表示已经被别人持有
-    ASSERT(!elem_find(&psema->waiters, &runing_thread()->general_tag));
-    if (elem_find(&psema->waiters, &runing_thread()->general_tag)) {
+    ASSERT(!elem_find(&psema->waiters, &running_thread()->general_tag));
+    if (elem_find(&psema->waiters, &running_thread()->general_tag)) {
       PANIC("sema_down: thread blocked has been in waiters_list\n");
     }
-    list_append(&psema->waiters, &runing_thread()->general_tag);
+    list_append(&psema->waiters, &running_thread()->general_tag);
     thread_block(TASK_BLOCKED);
   }
   /* 若 value 为 1 或被唤醒后成功获得锁,会执行下面的代码,也就是获得了锁*/
@@ -59,9 +59,9 @@ void sema_up(struct semaphore* psema) {
 
 /*获取锁plock*/
 void lock_acquire(struct lock* plock) {
-  if (plock->holder != runing_thread()) {
+  if (plock->holder != running_thread()) {
     sema_down(&plock->semaphore);  // 对信号量 P 操作,原子操作
-    plock->holder = runing_thread();
+    plock->holder = running_thread();
     ASSERT(plock->holder_repeat_nr == 0);
     plock->holder_repeat_nr = 1;
   } else {  // 已经加锁，未释放再次加锁
@@ -71,7 +71,7 @@ void lock_acquire(struct lock* plock) {
 
 /*释放锁plock*/
 void lock_release(struct lock* plock) {
-  ASSERT(plock->holder == runing_thread());  // 取保自己是锁的持有者
+  ASSERT(plock->holder == running_thread());  // 取保自己是锁的持有者
   if (plock->holder_repeat_nr > 1) {
     plock->holder_repeat_nr--;
     return;

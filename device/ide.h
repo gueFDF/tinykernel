@@ -3,8 +3,8 @@
 /*分区结构体*/
 #include "bitmap.h"
 #include "list.h"
-#include "sync.h"
 #include "stdint.h"
+#include "sync.h"
 struct partition {
   uint32_t start_lba;          // 起始扇区
   uint32_t sec_cnt;            // 扇区数
@@ -32,7 +32,7 @@ struct ide_channel {
   uint16_t port_base;          // 本通道其实端口号
   uint8_t irq_no;              // 本通道所用的中断号
   struct lock lock;            // 通道锁
-  bool expexting_intr;         // 表示等待硬盘的中断
+  bool expecting_intr;         // 表示等待硬盘的中断
   struct semaphore disk_done;  // 用于阻塞，唤醒驱动程序
   struct disk devices[2];  // 一个通道上连接两个磁盘，一主一从
 };

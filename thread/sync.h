@@ -1,8 +1,8 @@
 #ifndef THREAD_SYNC
 #define THREAD_SYNC
 #include "list.h"
-#include "thread.h"
 #include "stdint.h"
+#include "thread.h"
 
 /*信号量结构*/
 struct semaphore {
@@ -17,7 +17,7 @@ struct lock {
   uint32_t holder_repeat_nr;   // 锁的持有者重复申请锁的使用次数
 };
 
-void seam_init(struct semaphore* psema, uint8_t value);
+void sema_init(struct semaphore* psema, uint8_t value);
 void lock_init(struct lock* plock);
 void sema_down(struct semaphore* psema);
 void sema_up(struct semaphore* psema);

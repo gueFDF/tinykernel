@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 
-#include "io.h"
 #include "debug.h"
 #include "interrupt.h"
+#include "io.h"
 #include "memory.h"
 #include "stdio_kernel.h"
 #include "string.h"
@@ -101,7 +101,7 @@ static void select_sector(struct disk* hd, uint32_t lba, uint8_t sec_cnt) {
 
 /* 向通道 channel 发命令 cmd */
 static void cmd_out(struct ide_channel* channel, uint8_t cmd) {
-  channel->expexting_intr = true;  // 置为true,告诉中断处理程序，正在等待cmd结果
+  channel->expecting_intr = true;  // 置为true,告诉中断处理程序，正在等待cmd结果
   outb(reg_cmd(channel), cmd);
 }
 
@@ -227,8 +227,8 @@ void intr_hd_handler(uint8_t irq_no) {
   uint8_t ch_no = irq_no - 0x2e;
   struct ide_channel* channel = &channels[ch_no];
   ASSERT(channel->irq_no == irq_no);
-  if (channel->expexting_intr) {
-    channel->expexting_intr = false;
+  if (channel->expecting_intr) {
+    channel->expecting_intr = false;
     sema_up(&channel->disk_done);
     // 读取状态寄存器使硬盘控制器认为此次的中断已被处理,从而硬盘可以继续执行新的读写
     inb(reg_status(channel));
@@ -354,9 +354,9 @@ void ide_init() {
         channel->irq_no = 0x20 + 15;
         break;
     }
-    channel->expexting_intr = false;  // 未向硬盘写入指令时不期待硬盘的中断
+    channel->expecting_intr = false;  // 未向硬盘写入指令时不期待硬盘的中断
     lock_init(&channel->lock);
-    seam_init(&channel->disk_done, 0);
+    sema_init(&channel->disk_done, 0);
     register_handler(channel->irq_no, intr_hd_handler);
 
     while (dev_no < 2) {

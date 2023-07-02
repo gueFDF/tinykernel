@@ -8,7 +8,7 @@
 /*初始化io队列ioq*/
 void ioqueue_init(struct ioqueue* ioq) {
   lock_init(&ioq->lock);  // 初始化iod队列的锁
-  ioq->producter = ioq->consumer = NULL;
+  ioq->producer = ioq->consumer = NULL;
   ioq->head = ioq->tail = 0;
 }
 
@@ -30,7 +30,7 @@ bool ioq_empty(struct ioqueue* ioq) {
 /*使当前生产者或消费者在此缓冲区上等待*/
 static void ioq_wait(struct task_struct** waiter) {
   ASSERT(waiter != NULL && *waiter == NULL);
-  *waiter = runing_thread();
+  *waiter = running_thread();
   thread_block(TASK_BLOCKED);
 }
 
@@ -53,8 +53,8 @@ char ioq_getchar(struct ioqueue* ioq) {
   char byte = ioq->buf[ioq->tail];
   ioq->tail = next_pos(ioq->tail);
 
-  if (ioq->producter != NULL) {
-    wakeup(&ioq->producter);  // 唤醒生产者
+  if (ioq->producer != NULL) {
+    wakeup(&ioq->producer);  // 唤醒生产者
   }
 
   return byte;
@@ -65,13 +65,13 @@ void ioq_putchar(struct ioqueue* ioq, char byte) {
   while (ioq_full(ioq)) {
     // 如果该线程wait后，其他线程会那不到锁，也会进入block
     lock_acquire(&ioq->lock);
-    ioq_wait(&ioq->producter);
+    ioq_wait(&ioq->producer);
     lock_release(&ioq->lock);
   }
   ioq->buf[ioq->head] = byte;
   ioq->head = next_pos(ioq->head);
 
-  if (ioq->producter != NULL) {
+  if (ioq->producer != NULL) {
     wakeup(&ioq->consumer);  // 唤醒消费者
   }
 }

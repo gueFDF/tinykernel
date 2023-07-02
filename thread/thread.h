@@ -90,7 +90,7 @@ struct task_struct* thread_start(char* name, int prio, thread_func fuction,
                                  void* func_arg);
 
 /*获取当前pcb指针*/
-struct task_struct* runing_thread();
+struct task_struct* running_thread();
 
 /*实现任务调度*/
 void schedule();

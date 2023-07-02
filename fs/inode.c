@@ -89,7 +89,7 @@ struct inode* inode_open(struct partition* part, uint32_t inode_no) {
   /*从缓冲中没有找到*/
   struct inode_position inode_pos;
   inode_locate(part, inode_no, &inode_pos);  // 获取在磁盘中的位置
-  struct task_struct* cur = runing_thread();
+  struct task_struct* cur = running_thread();
 
   /* 为使通过 sys_malloc 创建的新 inode 被所有任务共享, 需要将 inode
  置于内核空间,故需要临时 将 cur_pbc->pgdir 置为 NULL */
@@ -122,7 +122,7 @@ void inode_close(struct inode* inode) {
   if (--inode->i_open_cnts == 0) {
     list_remove(&inode->inode_tag);
     // 确保被释放的是内核内存池
-    struct task_struct* cur = runing_thread();
+    struct task_struct* cur = running_thread();
     uint32_t* cur_pagedir_bak = cur->pgdir;
     cur->pgdir = NULL;  // 暂时置为空
     sys_free(inode);

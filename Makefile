@@ -56,10 +56,11 @@ LU_OBJS=${LU}/syscall.o
 LK_OBJS=${LK}/stdio_kernel.o  \
 		${LK}/bitmap.o \
 		${LK}/list.o \
-		${LK}/io.o
+		${LK}/io.o \
+		${LK}/print.o
 	
 GCC_FLAGS = -c -Wall -m32 -ggdb  \
--nostdinc -fno-pic -fno-builtin -fno-stack-protector -mno-sse -g
+-nostdinc  -fno-builtin -fno-stack-protector -mno-sse -g 
 
 OBJS=${K_OBJS}   \
 	 ${D_OBJS}   \
@@ -80,8 +81,7 @@ build:${OBJS}
 	nasm -I $B/include -o $B/loader.bin $B/loader.asm 
 	nasm -f elf -o $K/kernel.o $K/kernel.asm 
 	nasm -f elf -o $T/switch.o $T/switch.asm
-	nasm -f elf -o ${LK}/print.o ${LK}/print.asm
-	ld -m elf_i386 -T kernel.ld -o kernel.bin ${OBJS} $K/kernel.o  $T/switch.o ${LK}/print.o
+	ld -m elf_i386 -T kernel.ld -o kernel.bin ${OBJS} $K/kernel.o  $T/switch.o 
 
 $K/%.o:$K/%.c 
 	gcc ${include} ${GCC_FLAGS} -o $@ $^ 

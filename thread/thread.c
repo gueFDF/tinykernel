@@ -32,7 +32,7 @@ static void idle(void* arg UNUSED) {
 }
 
 /*获取当前pcb指针*/
-struct task_struct* runing_thread() {
+struct task_struct* running_thread() {
   uint32_t esp;
   asm("mov %%esp,%0" : "=g"(esp));  // 获取当前栈指针
 
@@ -127,7 +127,7 @@ struct task_struct* thread_start(char* name, int prio, thread_func fuction,
 void schedule() {
   // 此时中断应该处于关闭状态
   ASSERT(intr_get_status() == INTR_OFF);
-  struct task_struct* cur = runing_thread();
+  struct task_struct* cur = running_thread();
   if (cur->status == TASK_RUNNING) {
     // 该线程时间片已经使用完，将其加入队尾
     ASSERT(!elem_find(&thread_ready_list, &cur->general_tag));
@@ -161,7 +161,7 @@ static void make_main_thread(void) {
    * 咱们在 loader.S 中进入内核时的 mov esp,0xc009f000,
    * 就是为其预留 pcb 的,因此 pcb 地址为 0xc009e000,
    * 不需要通过 get_kernel_page 另分配一页*/
-  main_thread = runing_thread();
+  main_thread = running_thread();
   init_thread(main_thread, "main", 31);
 
   // main线程正在运行，所以不需要添加在就绪队列当中
@@ -174,7 +174,7 @@ void thread_block(enum task_status stat) {
   ASSERT(((stat == TASK_BLOCKED) || (stat == TASK_WAITING) ||
           (stat == TASK_HANGING)))
   enum intr_status old_status = intr_disable();  // 关闭中断
-  struct task_struct* cur_thread = runing_thread();
+  struct task_struct* cur_thread = running_thread();
   cur_thread->status = stat;
   schedule();  // 调度到其他线程
   /* 待当前线程被解除阻塞后才继续运行下面的 intr_set_status */
@@ -202,7 +202,7 @@ void thread_unblock(struct task_struct* pthread) {
 /*主动让出CPU(重新入队等待下一轮调度)*/
 void thread_yield(void) {
   put_str("thread_init start\n");
-  struct task_struct* cur = runing_thread();
+  struct task_struct* cur = running_thread();
   enum intr_status old_status = intr_disable();
   ASSERT(!elem_find(&thread_ready_list, &cur->general_tag));
   list_append(&thread_ready_list, &cur->general_tag);
@@ -212,7 +212,7 @@ void thread_yield(void) {
 }
 
 int32_t pcb_fd_install(uint32_t fd_idx) {
-  struct task_struct* cur_thread = runing_thread();
+  struct task_struct* cur_thread = running_thread();
   uint32_t idx = 3;
   while (idx < MAX_FILES_OPEN_PER_PROC) {
     if (cur_thread->fd_table[idx] == -1) {

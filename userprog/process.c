@@ -1,18 +1,18 @@
 #include "process.h"
 
 #include "bitmap.h"
-#include "print.h"
+#include "console.h"
 #include "debug.h"
 #include "global.h"
 #include "interrupt.h"
 #include "memory.h"
-#include "console.h"
+#include "print.h"
 #include "string.h"
 #include "tss.h"
 /*构建用户进程初始化上下文*/
 void start_process(void* filename_) {
   void* function = filename_;
-  struct task_struct* cur = runing_thread();
+  struct task_struct* cur = running_thread();
   cur->self_kstack += sizeof(struct thread_stack);  // 跳过进程栈，指向中断栈
   struct intr_stack* proc_stack = (struct intr_stack*)cur->self_kstack;
 

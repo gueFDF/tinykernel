@@ -54,8 +54,8 @@ void bitmap_sync(struct partition* part, uint32_t bit_idx, uint8_t btmp) {
   uint32_t off_sec = bit_idx / 4096;         // 该位扇区偏移量
   uint32_t off_size = off_sec * BLOCK_SIZE;  // 该位字节偏移量
 
-  uint32_t sec_lba;
-  uint8_t* bitmap_off;
+  uint32_t sec_lba = 0;
+  uint8_t* bitmap_off=0;
   /*需要被同步到硬盘的位图只有inode_bitmap和block_map*/
   switch (btmp) {
     case INODE_BITMAP:
@@ -72,7 +72,7 @@ void bitmap_sync(struct partition* part, uint32_t bit_idx, uint8_t btmp) {
 
 int32_t file_create(struct dir* parent_dir, char* filename, uint8_t flag) {
   /*后续操作的公共缓冲区*/
-  void* io_buf = sys_malloc(1204);
+  void* io_buf = sys_malloc(1024);
   if (io_buf == NULL) {
     printk("in file_creat: sys_malloc for io_buf failed\n");
     return -1;

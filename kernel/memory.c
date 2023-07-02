@@ -1,11 +1,11 @@
 #include "memory.h"
 
 #include "bitmap.h"
-#include "print.h"
 #include "debug.h"
 #include "global.h"
 #include "interrupt.h"
 #include "list.h"
+#include "print.h"
 #include "string.h"
 #include "sync.h"
 #include "thread.h"
@@ -123,7 +123,7 @@ static void* vaddr_get(enum pool_flags pf, uint32_t pg_cnt) {
     }
     vaddr_start = kernel_vaddr.vaddr_start + bit_idx_start * PG_SIZE;
   } else {  // 用户内存池
-    struct task_struct* cur = runing_thread();
+    struct task_struct* cur = running_thread();
     bit_idx_start = bitmap_scan(&cur->userprog_vaddr.vaddr_bitmap, pg_cnt);
     if (bit_idx_start == -1) {
       return NULL;
@@ -149,7 +149,7 @@ static void vaddr_remove(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt) {
       bitmap_set(&kernel_vaddr.vaddr_bitmap, bit_idx_start + cnt++, 0);
     }
   } else {
-    struct task_struct* cur_thread = runing_thread();
+    struct task_struct* cur_thread = running_thread();
     bit_idx_start = (vaddr - cur_thread->userprog_vaddr.vaddr_start) / PG_SIZE;
     while (cnt < pg_cnt) {
       bitmap_set(&cur_thread->userprog_vaddr.vaddr_bitmap,
@@ -319,7 +319,7 @@ void* get_a_page(enum pool_flags pf, uint32_t vaddr) {
   pool* mem_pool = pf & PF_KERNEL ? &kernel_pool : &user_pool;
   lock_acquire(&mem_pool->lock);
 
-  struct task_struct* cur = runing_thread();
+  struct task_struct* cur = running_thread();
   int32_t bit_idx = -1;
 
   /* 若当前是用户进程申请用户内存,就修改用户进程自己的虚拟地址位图 */
@@ -399,7 +399,7 @@ void* sys_malloc(uint32_t size) {
   struct pool* mem_pool;
   uint32_t pool_size;
   struct mem_block_desc* descs;
-  struct task_struct* cur_thread = runing_thread();
+  struct task_struct* cur_thread = running_thread();
   /*判断使用哪一个内存池*/
   if (cur_thread->pgdir == NULL) {  // 内核线程
     PF = PF_KERNEL;
@@ -493,7 +493,7 @@ void sys_free(void* ptr) {
     struct pool* mem_pool;
 
     /*判断是线程还是进程*/
-    if (runing_thread()->pgdir == NULL) {
+    if (running_thread()->pgdir == NULL) {
       ASSERT((uint32_t)ptr >= K_HEAP_START);
       PF = PF_KERNEL;
       mem_pool = &kernel_pool;

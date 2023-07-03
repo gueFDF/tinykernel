@@ -203,7 +203,7 @@ static void partition_format(struct partition* part) {
 }
 
 /*将最上层的路径名称解析出来 只会解析一层*/
-static char* path_parse(char* pathname, char* name_store) {
+char* path_parse(char* pathname, char* name_store) {
   if (pathname[0] == '/') {  // 根目录不需要单独解析
     while (*(++pathname) == '/')
       ;

@@ -111,4 +111,5 @@ void thread_yield(void);
 int32_t pcb_fd_install(uint32_t fd_idx);
 
 pid_t fork_pid(void);
+void sys_ps(void);
 #endif /* THREAD_THREAD */

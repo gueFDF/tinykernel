@@ -47,14 +47,16 @@ F_OBJS=$F/fs.o \
 	   $F/dir.o  \
 	   $F/file.o
 
-S_OBJS=$S/shell.o
+S_OBJS=$S/shell.o \
+	   $S/buildin_cmd.o
 
 
 L_OBJS=$L/stdio.o \
        $L/stdint.o \
 	   $L/string.o 
 
-LU_OBJS=${LU}/syscall.o
+LU_OBJS=${LU}/syscall.o \
+		${LU}/assert.o
 
 LK_OBJS=${LK}/stdio_kernel.o  \
 		${LK}/bitmap.o \

@@ -1,8 +1,11 @@
 #include "shell.h"
 
+#include <stdint.h>
 #include <string.h>
 
-#include "debug.h"
+#include "assert.h"
+#include "buildin_cmd.h"
+#include "dir.h"
 #include "file.h"
 #include "global.h"
 #include "stdio.h"
@@ -21,7 +24,7 @@ void print_prompt(void) { printf("[rabbit@localhost %s]$ ", cwd_cache); }
 
 /* 从键盘缓冲区中最多读入count个字节到buf。*/
 static void readline(char* buf, int32_t count) {
-  // assert(buf != NULL && count > 0);
+  assert(buf != NULL && count > 0);
   char* pos = buf;
 
   while (read(stdin_no, pos, 1) != -1 &&
@@ -42,24 +45,24 @@ static void readline(char* buf, int32_t count) {
         break;
 
         /* ctrl+l 清屏 */
-        //   case 'l' - 'a':
-        //     /* 1 先将当前的字符'l'-'a'置为0 */
-        //     *pos = 0;
-        //     /* 2 再将屏幕清空 */
-        //     clear();
-        //     /* 3 打印提示符 */
-        //     print_prompt();
-        //     /* 4 将之前键入的内容再次打印 */
-        //     printf("%s", buf);
-        //     break;
+      case 'l' - 'a':
+        /* 1 先将当前的字符'l'-'a'置为0 */
+        *pos = 0;
+        /* 2 再将屏幕清空 */
+        clear();
+        /* 3 打印提示符 */
+        print_prompt();
+        /* 4 将之前键入的内容再次打印 */
+        printf("%s", buf);
+        break;
 
-        //   /* ctrl+u 清掉输入 */
-        //   case 'u' - 'a':
-        //     while (buf != pos) {
-        //       putchar('\b');
-        //       *(pos--) = 0;
-        //     }
-        //     break;
+      /* ctrl+u 清掉输入 */
+      case 'u' - 'a':
+        while (buf != pos) {
+          putchar('\b');
+          *(pos--) = 0;
+        }
+        break;
 
       /* 非控制键则输出字符 */
       default:
@@ -72,6 +75,43 @@ static void readline(char* buf, int32_t count) {
       "128\n");
 }
 
+/* 分析字符串 cmd_str 中以 token 为分隔符的单词,将各单词的指针存入 argv 数组 */
+static int32_t cmd_parse(char* cmd_str, char** argv, char token) {
+  assert(cmd_str != NULL);
+  int32_t arg_idx = 0;
+  while (arg_idx < MAX_ARG_NR) {
+    argv[arg_idx] = NULL;
+    arg_idx++;
+  }
+  char* next = cmd_str;
+  int32_t argc = 0;
+  /* 外层循环处理整个命令行 */
+  while (*next) {
+    /* 去除命令字或参数之间的空格 */
+    while (*next == token) {
+      next++;
+    }
+    if (*next == 0) {
+      break;
+    }
+    argv[argc] = next;
+    while (*next && *next != token) {
+      next++;
+    }
+    if (*next) {
+      *next++ = 0;
+    }
+    if (argc > MAX_ARG_NR) {
+      return -1;
+    }
+    argc++;
+  }
+  return argc;
+}
+
+char* argv[MAX_ARG_NR];
+int32_t argc = -1;
+
 /* 简单的shell */
 void my_shell(void) {
   cwd_cache[0] = '/';
@@ -82,6 +122,19 @@ void my_shell(void) {
     if (cmd_line[0] == 0) {  // 若只键入了一个回车
       continue;
     }
+    argc = -1;
+    argc = cmd_parse(cmd_line, argv, ' ');
+    if (argc == -1) {
+      printf("num of arguments exceed %d\n", MAX_ARG_NR);
+      continue;
+    }
+    char buf[MAX_PATH_LEN] = {0};
+    int32_t arg_idx = 0;
+    while (arg_idx < argc) {
+      make_clear_abs_path(argv[arg_idx], buf);
+      printf("%s -> %s\n", argv[arg_idx], buf);
+      arg_idx++;
+    }
   }
-  // panic("my_shell: should not be here");
+  panic("my_shell: should not be here");
 }

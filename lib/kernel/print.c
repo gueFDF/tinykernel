@@ -99,6 +99,11 @@ void put_str(char *cstr) {
   }
 }
 
+void put_str_color(char *cstr, real_color_t back, real_color_t fore) {
+  while (*cstr) {
+    put_char_color(*cstr++, back, fore);
+  }
+}
 // 输出字符串(自定义颜色)
 void console_write_color(char *cstr, real_color_t back, real_color_t fore) {
   while (*cstr) {

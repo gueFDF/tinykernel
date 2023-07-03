@@ -36,4 +36,9 @@ void console_put_int(uint32_t num) {
   console_release();
 }
 
+void console_str_color(char* c, real_color_t fore) {
+  console_acquire();
+  put_str_color(c, rc_black, fore);
+  console_release();
+}
 void sys_putchar(uint8_t c) { console_put_char(c); }

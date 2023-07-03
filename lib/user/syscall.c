@@ -1,6 +1,7 @@
 #include "syscall.h"
 
 #include "fs.h"
+#include "print.h"
 
 // 无参数的系统调用
 #define _syscall0(NUMBER)                                              \
@@ -124,3 +125,7 @@ int32_t chdir(const char* path) { return _syscall1(SYS_CHDIR, path); }
 
 /* 显示任务列表 */
 void ps(void) { _syscall0(SYS_PS); }
+
+void put_color(char* str, real_color_t color) {
+  _syscall2(SYS_PUT_COLOR, str, color);
+}

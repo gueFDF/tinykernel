@@ -21,6 +21,7 @@ typedef enum real_color {
   rc_white = 15
 } real_color_t;
 
+void put_str_color(char* cstr, real_color_t back, real_color_t fore);
 void put_char(uint8_t char_asci);
 void put_str(char* message);
 void put_int(uint32_t num);  // 以16进制打印

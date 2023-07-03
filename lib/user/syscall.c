@@ -129,3 +129,6 @@ void ps(void) { _syscall0(SYS_PS); }
 void put_color(char* str, real_color_t color) {
   _syscall2(SYS_PUT_COLOR, str, color);
 }
+
+// 创建文件
+int32_t create(const char* pathname) { return _syscall1(SYS_CREAT, pathname); }

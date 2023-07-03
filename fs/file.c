@@ -55,7 +55,7 @@ void bitmap_sync(struct partition* part, uint32_t bit_idx, uint8_t btmp) {
   uint32_t off_size = off_sec * BLOCK_SIZE;  // 该位字节偏移量
 
   uint32_t sec_lba = 0;
-  uint8_t* bitmap_off=0;
+  uint8_t* bitmap_off = 0;
   /*需要被同步到硬盘的位图只有inode_bitmap和block_map*/
   switch (btmp) {
     case INODE_BITMAP:
@@ -86,9 +86,12 @@ int32_t file_create(struct dir* parent_dir, char* filename, uint8_t flag) {
     printk("in file_creat: allocate inode failed\n");
     return -1;
   }
+  struct task_struct* cur = running_thread();
 
   /* 此 inode 要从堆中申请内存,不可生成局部变量(函数退出时会释放)
    * 因为 file_table 数组中的文件描述符的 inode 指针要指向它 */
+  uint32_t* cur_pagedir_bak = cur->pgdir;
+  cur->pgdir = NULL;  // 暂时置为空
   struct inode* new_file_inode =
       (struct inode*)sys_malloc(sizeof(struct inode));
   if (new_file_inode == NULL) {
@@ -96,6 +99,9 @@ int32_t file_create(struct dir* parent_dir, char* filename, uint8_t flag) {
     rollback_step = 1;
     goto rollback;
   }
+  /*恢复pgdir*/
+  cur->pgdir = cur_pagedir_bak;
+
   inode_init(inode_no, new_file_inode);  // 初始化inode节点
 
   int fd_idx = get_free_slot_in_global();

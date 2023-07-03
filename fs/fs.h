@@ -72,4 +72,5 @@ int32_t sys_rmdir(const char* pathname);
 char* sys_getcwd(char* buf, uint32_t size);
 int32_t sys_chdir(const char* path);
 int32_t sys_stat(const char* path, struct stat* buf);
+int32_t sys_create(const char* pathname);
 #endif /* FS_FS */

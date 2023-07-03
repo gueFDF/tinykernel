@@ -365,6 +365,42 @@ int32_t sys_open(const char* pathname, uint8_t flags) {
   return fd;
 }
 
+/* 打开或创建文件成功后,返回文件描述符,否则返回-1 */
+int32_t sys_create(const char* pathname) {
+  /* 对目录要用 dir_open,这里只有 open 文件 */
+  if (pathname[strlen(pathname) - 1] == '/') {
+    printk("can't open a directory %s \n", pathname);
+    return -1;
+  }
+  int32_t fd = -1;  // 默认找不见
+  struct path_search_record searched_record;
+  memset(&searched_record, 0, sizeof(struct path_search_record));
+
+  /*记录目录深度，帮助判断中间某个目录不存在的情况*/
+  uint32_t pathname_depth = path_depth_cnt((char*)pathname);
+  /*先检查文件是否存在*/
+  int inode_no = search_file(pathname, &searched_record);
+  bool found = inode_no != -1 ? true : false;
+  if (found) {
+    return -1;
+  }
+  uint32_t path_search_depth = path_depth_cnt(searched_record.searched_path);
+
+  /* 先判断是否把 pathname 的各层目录都访问到了,即是否在某个中间目录就失败了 */
+  if (pathname_depth != path_search_depth) {  // 中间失败
+    printk("cannot access %s: Not a directory, subpath %s is't exist\n",
+           pathname, searched_record.searched_path);
+    dir_close(searched_record.parent_dir);
+    return -1;
+  }
+
+  fd = file_create(searched_record.parent_dir, (strchr(pathname, '/') + 1),
+                   O_CREAT);
+  dir_close(searched_record.parent_dir);
+  sys_close(fd);
+  return 0;
+}
+
 /* 在磁盘上搜索文件系统,若没有则格式化分区创建文件系统 */
 void filesys_init() {
   uint8_t channel_no = 0, dev_no = 0, part_idx = 0;

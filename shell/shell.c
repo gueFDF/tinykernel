@@ -149,6 +149,8 @@ void my_shell(void) {
       buildin_rmdir(argc, argv);
     } else if (!strcmp("rm", argv[0])) {
       buildin_rm(argc, argv);
+    } else if (!strcmp("touch", argv[0])) {
+      buildin_touch(argc, argv);
     } else {
       printf("external command\n");
     }

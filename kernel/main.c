@@ -26,6 +26,7 @@ int main(void) {
   intr_enable();
   cls_screen();
   console_put_str("[rabbit@localhost /]$ ");
+
   while (1)
     ;
   return 0;
@@ -45,6 +46,8 @@ void k_thread_b(void* arg) {
 
 /* 测试用户进程 */
 void u_prog_a(void) {
+  uint32_t a = open("/t", O_CREAT);
+  close(a);
   while (1)
     ;
 }

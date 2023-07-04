@@ -187,7 +187,8 @@ static void intr_keyboard_handler(void) {
       caps_lock_status = !caps_lock_status;
     }
   } else {
-    put_str("unknow key\n");
+    // 什么都不做(无响应)
+    // put_str("unknow key\n");
   }
 }
 

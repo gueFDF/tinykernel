@@ -132,3 +132,7 @@ void put_color(char* str, real_color_t color) {
 
 // 创建文件
 int32_t create(const char* pathname) { return _syscall1(SYS_CREAT, pathname); }
+
+int32_t execv(const char* path, char* argv[]) {
+  return _syscall2(SYS_EXECV, path, argv);
+}

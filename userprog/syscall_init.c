@@ -1,6 +1,7 @@
 #include "syscall_init.h"
 
 #include "console.h"
+#include "exec.h"
 #include "fork.h"
 #include "fs.h"
 #include "memory.h"
@@ -43,5 +44,6 @@ void syscall_init(void) {
   syscall_table[SYS_PS] = sys_ps;
   syscall_table[SYS_PUT_COLOR] = console_str_color;
   syscall_table[SYS_CREAT] = sys_create;
+  syscall_table[SYS_EXECV] = sys_execv;
   put_str("syscall_init done\n");
 }

@@ -1,15 +1,14 @@
 #include "shell.h"
 
-#include <stdint.h>
-#include <string.h>
-
 #include "assert.h"
 #include "buildin_cmd.h"
 #include "dir.h"
+#include "exec.h"
 #include "file.h"
 #include "fs.h"
 #include "global.h"
 #include "stdio.h"
+#include "string.h"
 #include "syscall.h"
 #define cmd_len 128    // 最大支持键入128个字符的命令行输入
 #define MAX_ARG_NR 16  // 加上命令名外,最多支持15个参数
@@ -151,8 +150,30 @@ void my_shell(void) {
       buildin_rm(argc, argv);
     } else if (!strcmp("touch", argv[0])) {
       buildin_touch(argc, argv);
-    } else {
-      printf("external command\n");
+    } else {  // 如果是外部命令,需要从磁盘上加载
+      int32_t pid = fork();
+      if (pid) {   // 父进程
+        while (1)  // 防止父进程先结束(后续改进)
+          ;
+      } else {
+        make_clear_abs_path(argv[0], final_path);
+        /* 先判断下文件是否存在 */
+        struct stat file_stat;
+        memset(&file_stat, 0, sizeof(struct stat));
+        if (stat(argv[0], &file_stat) == -1) {
+          printf("my_shell: cannot access %s,No such file or directory\n",
+                 argv[0]);
+        } else {
+          execv(argv[0], argv);
+        }
+        while (1)
+          ;
+      }
+      int32_t arg_idx = 0;
+      while (arg_idx < MAX_ARG_NR) {
+        argv[arg_idx] = NULL;
+        arg_idx++;
+      }
     }
   }
   panic("my_shell: should not be here");

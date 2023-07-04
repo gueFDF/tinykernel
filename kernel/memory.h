@@ -52,4 +52,7 @@ void* sys_malloc(uint32_t size);
 void sys_free(void* ptr);
 void* get_a_page_without_opvaddrbitmap(enum pool_flags pf, uint32_t vaddr);
 void mfree_page(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt);
+
+uint32_t* pte_ptr(uint32_t vaddr);
+uint32_t* pde_ptr(uint32_t vaddr);
 #endif /* KERNEL_MEMORY */

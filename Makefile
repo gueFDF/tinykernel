@@ -38,7 +38,8 @@ T_OBJS=$T/sync.o \
 U_OBJS=$U/tss.o \
 	   $U/process.o \
 	   $U/syscall_init.o  \
-	   $U/fork.o
+	   $U/fork.o \
+	   $U/exec.o
 
 
 

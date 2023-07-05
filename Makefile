@@ -124,21 +124,25 @@ ${LU}/%.o:${LU}/%.c
 
 
 dd: build
-	dd if=/dev/zero of=$B/boot.img bs=512 count=61440
+	dd if=/dev/zero of=$B/boot.img bs=1M count=60
 	dd if=$B/mbr.bin of=$B/boot.img bs=512 count=1 conv=notrunc
 	dd if=$B/loader.bin of=$B/boot.img bs=512 count=4 seek=2 conv=notrunc
 	dd if=kernel.bin of=$B/boot.img bs=512 count=200 seek=9 conv=notrunc
 
 
-run:dd
-	# @ rm -rf hd80M.img 
-	# sh partition.sh 
+
+
+run:dd 
+	@ rm -rf hd80M.img 
+	sh partition.sh 
+	cd command && sh compile.sh
 	${BOCHS_PATH} -qf bochsrc.disk  
 	make clean
 	
 run_gdb:dd
 	@ rm -rf hd80M.img 
 	sh partition.sh 
+	cd command && sh compile.sh
 	${BOCHS_GDB_PATH} -qf bochsrc.disk  ${BOCHS_GDB_FLAG} & 
 	gdb ./kernel.bin -ex ${BOCHS_PORt}
 	pkill bochs

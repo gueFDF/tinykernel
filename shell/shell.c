@@ -160,6 +160,8 @@ void my_shell(void) {
         /* 先判断下文件是否存在 */
         struct stat file_stat;
         memset(&file_stat, 0, sizeof(struct stat));
+        memcpy(argv[0], final_path, strlen(final_path));
+        argv[0][strlen(final_path)] = 0;
         if (stat(argv[0], &file_stat) == -1) {
           printf("my_shell: cannot access %s,No such file or directory\n",
                  argv[0]);

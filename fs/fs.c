@@ -67,7 +67,7 @@ static bool mount_partition(struct list_elem* pelem, int arg) {
     list_init(&cur_part->open_inodes);
     printk("mount %s done!\n", part->name);
 
-    // sys_free(sb_buf);
+    sys_free(sb_buf);
     // 此处是为了配合 list_traversal
     return true;
   }
@@ -254,6 +254,7 @@ static int search_file(const char* pathname,
 
   uint32_t path_len = strlen(pathname);
   /* 保证 pathname 至少是这样的路径/x,且小于最大长度 */
+  printk("pathname %s  path_len:%d \n", pathname,path_len);
   ASSERT(pathname[0] == '/' && path_len > 1 && path_len < MAX_PATH_LEN);
 
   char* sub_path = (char*)pathname;

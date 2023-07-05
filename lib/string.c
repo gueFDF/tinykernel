@@ -2,8 +2,9 @@
 
 #include "debug.h"
 #include "global.h"
+#include <assert.h>
 void memcpy(void *dest, const void *src, uint32_t len) {
-  ASSERT(dest != NULL && src != NULL);
+  assert(dest != NULL && src != NULL);
   uint8_t *To = (uint8_t *)dest;
   uint8_t *From = (uint8_t *)src;
   while (len-- > 0) {
@@ -12,7 +13,7 @@ void memcpy(void *dest, const void *src, uint32_t len) {
 }
 
 void memset(void *dest, uint8_t val, uint32_t len) {
-  ASSERT(dest != NULL);
+  assert(dest != NULL);
   uint8_t *dst = (uint8_t *)dest;
   while (len-- > 0) {
     *dst++ = val;
@@ -22,7 +23,7 @@ void memset(void *dest, uint8_t val, uint32_t len) {
 int memcmp(const void *a_, const void *b_, uint32_t size) {
   const char *a = a_;
   const char *b = b_;
-  ASSERT(a != NULL || b != NULL);
+  assert(a != NULL || b != NULL);
   while (size-- > 0) {
     if (*a != *b) {
       return *a - *b;
@@ -35,7 +36,7 @@ int memcmp(const void *a_, const void *b_, uint32_t size) {
 void bzero(void *dest, uint32_t len) { memset(dest, 0, len); }
 
 int strcmp(const char *str1, const char *str2) {
-  ASSERT(str1 != NULL || str2 != NULL);
+  assert(str1 != NULL || str2 != NULL);
   while ((*str1 == *str2) && (*str1 != '\0')) {
     str1++;
     str2++;
@@ -44,7 +45,7 @@ int strcmp(const char *str1, const char *str2) {
 }
 
 char *strcpy(char *dest, const char *src) {
-  ASSERT(dest != NULL && src != NULL);
+  assert(dest != NULL && src != NULL);
   char *temp = dest;
   while (*src) {
     *dest++ = *src++;
@@ -53,7 +54,7 @@ char *strcpy(char *dest, const char *src) {
 }
 
 size_t strlen(const char *s) {
-  ASSERT(s != NULL);
+  assert(s != NULL);
   const char *p = s;
   while (*p++) {
   }
@@ -62,7 +63,7 @@ size_t strlen(const char *s) {
 
 /*首次出现ch的地址*/
 char *strchr(const char *str, const uint8_t ch) {
-  ASSERT(str != NULL);
+  assert(str != NULL);
   while (*str != 0) {
     if (*str == ch) {
       return (char *)str;
@@ -74,7 +75,7 @@ char *strchr(const char *str, const uint8_t ch) {
 
 /* 将字符串src_拼接到dst_后,将回拼接的串地址 */
 char *strcat(char *dst_, const char *src_) {
-  ASSERT(dst_ != NULL && src_ != NULL);
+  assert(dst_ != NULL && src_ != NULL);
   char *str = dst_;
   while (*str++)
     ;
@@ -85,7 +86,7 @@ char *strcat(char *dst_, const char *src_) {
 }
 
 char *strrchr(const char *str, const uint8_t ch) {
-  ASSERT(str != NULL);
+  assert(str != NULL);
   char *temp = NULL;
   while (*str != 0) {
     if (*str == ch) {

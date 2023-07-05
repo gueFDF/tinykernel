@@ -1,5 +1,5 @@
-#ifndef KERNEL_STRING
-#define KERNEL_STRING
+#ifndef LIB_STRING
+#define LIB_STRING
 
 #include "stdint.h"
 
@@ -20,4 +20,4 @@ char *strcat(char *dest, const char *src);
 size_t strlen(const char *s);
 char *strchr(const char *str, const uint8_t ch);
 char *strrchr(const char *str, const uint8_t ch);
-#endif /* KERNEL_STRING */
+#endif /* LIB_STRING */

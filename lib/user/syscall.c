@@ -1,7 +1,5 @@
 #include "syscall.h"
 
-#include "fs.h"
-#include "print.h"
 
 // 无参数的系统调用
 #define _syscall0(NUMBER)                                              \

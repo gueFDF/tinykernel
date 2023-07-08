@@ -21,7 +21,8 @@ DD_IN=$BIN
 DD_OUT="/home/gty/vscode/os/boot/boot.img"
 
 gcc $CFLAGS $LIBS -o $BIN".o" $BIN".c"
-ld -m elf_i386 -T program.ld  $BIN".o" $OBJS -o $BIN
+nasm -f elf ./start.asm -o ./start.o
+ld -m elf_i386 -T program.ld  $BIN".o" $OBJS start.o -o $BIN
 SEC_CNT=$(ls -l $BIN | awk '{printf("%d", ($5+511)/512)}')
 
 if [[ -f $BIN ]]; then

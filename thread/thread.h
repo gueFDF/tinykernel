@@ -80,6 +80,7 @@ struct task_struct {
   struct mem_block_desc u_block_desc[DESC_CNT];  // 用户进程内存块描述符
   uint32_t cwd_inode_nr;  // 进程所在的工作目录的inode编号
   int16_t parent_pid;     // 父进程的pid
+  int8_t exit_status;     // 进程结束时自己调用exit传入的返回值
   uint32_t stack_magic;   // 栈的边界标记,用于检测栈的溢出
 };
 

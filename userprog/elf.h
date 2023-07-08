@@ -1,5 +1,5 @@
-#ifndef KERNEL_ELF
-#define KERNEL_ELF
+#ifndef USERPROG_ELF
+#define USERPROG_ELF
 #include "stdint.h"
 
 #define EI_NIDENT (16)
@@ -47,4 +47,4 @@ enum segment_type {
   PT_PHDR      // 程序头
 };
 
-#endif /* KERNEL_ELF */
+#endif /* USERPROG_ELF */

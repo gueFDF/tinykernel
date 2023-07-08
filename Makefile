@@ -164,4 +164,5 @@ clean:
 	@ rm -rf lib/kernel/*.o
 	@ rm -rf lib/*.o
 	@ rm -rf fs/*.o
+	@ rm -rf command/*.o
 

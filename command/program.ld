@@ -1,7 +1,7 @@
 ENTRY(main)
 SECTIONS
 {
-
+    . = 0x8048000;
     .data :
     {
         *(.data)
@@ -12,7 +12,6 @@ SECTIONS
     {
         *(.text)
     }
-
 
     .bss :
     {

@@ -39,7 +39,8 @@ U_OBJS=$U/tss.o \
 	   $U/process.o \
 	   $U/syscall_init.o  \
 	   $U/fork.o \
-	   $U/exec.o
+	   $U/exec.o \
+	   $U/wait_exit.o 
 
 
 
@@ -133,16 +134,16 @@ dd: build
 
 
 run:dd 
-	@ rm -rf hd80M.img 
-	sh partition.sh 
-	cd command && sh compile.sh
+	# @ rm -rf hd80M.img 
+	# sh partition.sh 
+	# cd command && sh compile.sh
 	${BOCHS_PATH} -qf bochsrc.disk  
 	make clean
 	
 run_gdb:dd
-	@ rm -rf hd80M.img 
-	sh partition.sh 
-	cd command && sh compile.sh
+	# @ rm -rf hd80M.img 
+	# sh partition.sh 
+	# cd command && sh compile.sh
 	${BOCHS_GDB_PATH} -qf bochsrc.disk  ${BOCHS_GDB_FLAG} & 
 	gdb ./kernel.bin -ex ${BOCHS_PORt}
 	pkill bochs

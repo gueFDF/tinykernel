@@ -31,7 +31,9 @@ enum SYSCALL_NR {
   SYS_PS,
   SYS_PUT_COLOR,
   SYS_CREAT,
-  SYS_EXECV
+  SYS_EXECV,
+  SYS_EXIT,
+  SYS_WAIT
 };
 uint32_t getpid(void);
 uint32_t write(int32_t fd, const void* buf, uint32_t count);
@@ -58,4 +60,6 @@ void ps(void);
 void put_color(char* str, real_color_t color);
 int32_t create(const char* pathname);
 int32_t execv(const char* path, char* argv[]);
+void exit(int32_t status);
+pid_t wait(int32_t* status);
 #endif /* LIB_USER_SYSCALL */

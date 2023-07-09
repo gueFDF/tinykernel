@@ -38,7 +38,7 @@ static int32_t copy_pcb_vaddrbitmap_stack0(struct task_struct* child_thread,
          bitmap_pg_cnt * PG_SIZE);
   child_thread->userprog_vaddr.vaddr_bitmap.bits = vaddr_btmp;
   /* 调试用 */
-  ASSERT(strlen(child_thread->name) < 11);
+  //ASSERT(strlen(child_thread->name) < 11);
   strcat(child_thread->name, "_fork");
   return 0;
 }

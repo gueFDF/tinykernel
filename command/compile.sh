@@ -11,10 +11,13 @@ if [[ ! -d "../lib" ]]; then
     exit
 fi
 
-BIN="prog_no_arg"
+BIN="cat"
 CFLAGS="-Wall -c -m32 -fno-builtin -W -Wstrict-prototypes \
-      -Wmissing-prototypes -Wsystem-headers"
-LIBS="-I ../lib -I ../lib/user"
+      -Wmissing-prototypes -Wsystem-headers -fno-stack-protector "
+LIBS="-I ../lib/ -I ../lib/kernel/ -I ../lib/user/ -I \
+ ../kernel/ -I ../device/ -I ../thread/ -I \
+ ../userprog/ -I ../fs/ -I ../shell/"
+ 
 OBJS="../lib/string.o ../lib/user/syscall.o \
       ../lib/stdio.o ../lib/user/assert.o"
 DD_IN=$BIN

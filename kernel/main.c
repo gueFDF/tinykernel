@@ -26,9 +26,10 @@ int main(void) {
   init_all();
   intr_enable();
   /*************    写入应用程序    *************/
-  load_user_code(17956,"prog_arg");
+  // load_user_code(18292, "prog_arg");
+  //  load_user_code(18652, "cat");
   /*************    写入应用程序结束   *************/
-  //cls_screen();
+  cls_screen();
   console_put_str("[rabbit@localhost /]$ ");
   while (1)
     ;
@@ -78,7 +79,7 @@ void load_user_code(uint32_t size, char* name) {
   char namebuf[16] = {0};
   namebuf[0] = '/';
   namebuf[1] = 0;
-  strcat(namebuf,name);
+  strcat(namebuf, name);
   void* prog_buf = sys_malloc(file_size);
   ide_read(sda, 300, prog_buf, sec_cnt);
   int32_t fd = sys_open(namebuf, O_CREAT | O_RDWR);

@@ -113,4 +113,7 @@ int32_t pcb_fd_install(uint32_t fd_idx);
 
 pid_t fork_pid(void);
 void sys_ps(void);
+void release_pid(pid_t pid);
+void thread_exit(struct task_struct* thread_over, bool need_schedule);
+struct task_struct* pid2thread(int32_t pid);
 #endif /* THREAD_THREAD */

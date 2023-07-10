@@ -150,7 +150,11 @@ help\nlist all files in the current dirctory if no option\n");
       printf("ls: getcwd for default path failed\n");
       return;
     }
+  } else {
+    make_clear_abs_path(pathname, final_path);
+    pathname = final_path;
   }
+
   if (stat(pathname, &file_stat) == -1) {
     printf("ls: cannot access %s: No such file or directory\n", pathname);
     return;
@@ -190,7 +194,6 @@ help\nlist all files in the current dirctory if no option\n");
       }
     } else {
       while ((dir_e = readdir(dir))) {
-        // printf("%s ", dir_e->filename);
         print_name(dir_e);
         printf(" ");
       }
@@ -199,9 +202,9 @@ help\nlist all files in the current dirctory if no option\n");
     closedir(dir);
   } else {
     if (long_info) {
-      printf("- %d %d %s\n", file_stat.st_ino, file_stat.st_size);
+      printf("- %d %d %s\n", file_stat.st_ino, file_stat.st_size, pathname + 1);
     } else {
-      printf("%s\n", pathname);
+      printf("%s\n", pathname + 1);
     }
   }
 }

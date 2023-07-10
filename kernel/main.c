@@ -27,7 +27,7 @@ int main(void) {
   intr_enable();
   /*************    写入应用程序    *************/
   // load_user_code(18292, "prog_arg");
-  //load_user_code(19908, "test_pipe");
+  //load_user_code(20576, "cat");
   /*************    写入应用程序结束   *************/
   cls_screen();
   console_put_str("[rabbit@localhost /]$ ");

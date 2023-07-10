@@ -11,7 +11,7 @@ if [[ ! -d "../lib" ]]; then
     exit
 fi
 
-BIN="pipe_test"
+BIN="cat"
 CFLAGS="-Wall -c -m32 -fno-builtin -W -Wstrict-prototypes \
       -Wmissing-prototypes -Wsystem-headers -fno-stack-protector -mno-sse -g "
 LIBS="-I ../lib/ -I ../lib/kernel/ -I ../lib/user/ -I \

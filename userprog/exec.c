@@ -123,7 +123,7 @@ static void proc_clean() {
     list_init(&cur->u_block_desc[i].free_list);
   }
 
-  /* 关闭进程打开的文件 */
+  // /* 关闭进程打开的文件 */
   uint8_t fd_idx = 3;
   while (fd_idx < MAX_FILES_OPEN_PER_PROC) {
     if (cur->fd_table[fd_idx] != -1) {

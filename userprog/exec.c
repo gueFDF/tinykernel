@@ -1,8 +1,10 @@
 #include "exec.h"
 
 #include "elf.h"
+#include "file.h"
 #include "fs.h"
 #include "memory.h"
+#include "pipe.h"
 #include "string.h"
 extern void intr_exit(void);
 #define TASK_NAME_LEN 16
@@ -125,7 +127,15 @@ static void proc_clean() {
   uint8_t fd_idx = 3;
   while (fd_idx < MAX_FILES_OPEN_PER_PROC) {
     if (cur->fd_table[fd_idx] != -1) {
-      sys_close(fd_idx);
+      if (is_pipe(fd_idx)) {
+        uint32_t global_fd = fd_local2global(fd_idx);
+        if (--file_table[global_fd].fd_pos == 0) {
+          mfree_page(PF_KERNEL, file_table[global_fd].fd_inode, 1);
+          file_table[global_fd].fd_inode = NULL;
+        }
+      } else {
+        sys_close(fd_idx);
+      }
     }
     fd_idx++;
   }

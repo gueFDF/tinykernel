@@ -50,7 +50,8 @@ F_OBJS=$F/fs.o \
 	   $F/file.o
 
 S_OBJS=$S/shell.o \
-	   $S/buildin_cmd.o
+	   $S/buildin_cmd.o \
+	   $S/pipe.o 
 
 
 L_OBJS=$L/stdio.o \

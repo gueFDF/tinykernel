@@ -33,7 +33,8 @@ enum SYSCALL_NR {
   SYS_CREAT,
   SYS_EXECV,
   SYS_EXIT,
-  SYS_WAIT
+  SYS_WAIT,
+  SYS_PIPE
 };
 uint32_t getpid(void);
 uint32_t write(int32_t fd, const void* buf, uint32_t count);
@@ -62,4 +63,5 @@ int32_t create(const char* pathname);
 int32_t execv(const char* path, char* argv[]);
 void exit(int32_t status);
 pid_t wait(int32_t* status);
+int32_t pipe(int32_t pipefd[2]);
 #endif /* LIB_USER_SYSCALL */

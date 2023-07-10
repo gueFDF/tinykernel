@@ -6,6 +6,7 @@
 #include "inode.h"
 #include "interrupt.h"
 #include "memory.h"
+#include "pipe.h"
 #include "process.h"
 #include "string.h"
 
@@ -38,7 +39,7 @@ static int32_t copy_pcb_vaddrbitmap_stack0(struct task_struct* child_thread,
          bitmap_pg_cnt * PG_SIZE);
   child_thread->userprog_vaddr.vaddr_bitmap.bits = vaddr_btmp;
   /* 调试用 */
-  //ASSERT(strlen(child_thread->name) < 11);
+  // ASSERT(strlen(child_thread->name) < 11);
   strcat(child_thread->name, "_fork");
   return 0;
 }
@@ -117,7 +118,11 @@ static void update_inode_open_cnts(struct task_struct* thread) {
     global_fd = thread->fd_table[local_fd];
     // ASSERT(global_fd < MAX_FILE_OPEN);
     if (global_fd != -1) {
-      file_table[global_fd].fd_inode->i_open_cnts++;
+      if (is_pipe(local_fd)) {
+        file_table[global_fd].fd_pos++;
+      } else {
+        file_table[global_fd].fd_inode->i_open_cnts++;
+      }
     }
     local_fd++;
   }

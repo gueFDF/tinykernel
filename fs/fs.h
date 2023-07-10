@@ -21,10 +21,11 @@ enum file_types {
 
 /*打开文件的选项*/
 enum oflags {
-  O_RDINLY,    // 只读
-  O_WRONLY,    // 只写
-  O_RDWR,      // 读写
-  O_CREAT = 4  // 创建
+  O_RDINLY,     // 只读
+  O_WRONLY,     // 只写
+  O_RDWR,       // 读写
+  O_CREAT = 4,  // 创建
+  PIPE_FLAG     // 管道文件
 };
 
 /*文件读写位置偏移*/
@@ -73,4 +74,5 @@ char* sys_getcwd(char* buf, uint32_t size);
 int32_t sys_chdir(const char* path);
 int32_t sys_stat(const char* path, struct stat* buf);
 int32_t sys_create(const char* pathname);
+uint32_t fd_local2global(uint32_t local_fd);
 #endif /* FS_FS */

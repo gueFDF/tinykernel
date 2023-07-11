@@ -10,7 +10,7 @@
 #define esc '\033'
 #define backspace '\b'
 #define tab '\t'
-#define enter '\r'
+#define enter '\n'
 #define delete '\177'
 
 /*以上不可见字符一律定义为0*/

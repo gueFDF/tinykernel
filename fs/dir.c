@@ -165,8 +165,6 @@ bool sync_dir_entry(struct dir* parent_dir, struct dir_entry* p_de,
         ide_write(cur_part->my_disk, dir_inode->i_sectors[12], all_blocks + 12,
                   1);
       } else {  // 已经分配了12
-        ide_read(cur_part->my_disk, dir_inode->i_sectors[12], all_blocks + 12,
-                 1);
         all_blocks[block_idx] = block_lba;
         ide_write(cur_part->my_disk, dir_inode->i_sectors[12], all_blocks + 12,
                   1);
@@ -194,6 +192,10 @@ bool sync_dir_entry(struct dir* parent_dir, struct dir_entry* p_de,
       dir_entry_idx++;
     }
     block_idx++;
+    // 读取二级块
+    if (block_idx > 12) {
+      ide_read(cur_part->my_disk, dir_inode->i_sectors[12], all_blocks + 12, 1);
+    }
   }
   printk("directory is full!\n");
   return false;

@@ -101,16 +101,6 @@ char* buildin_cd(uint32_t argc, char** argv) {
   return final_path;
 }
 
-static void print_name(struct dir_entry* d) {
-  if (d->f_type == FT_DIRECTORY) {  // 目录,蓝色输出
-    put_color(d->filename, BLUE);
-  } else if (d->f_type == FT_REGULAR) {
-    put_color(d->filename, WHITE);
-  } else {
-    put_color(d->filename, RED);
-  }
-}
-
 void buildin_ls(uint32_t argc, char** argv) {
   char* pathname = NULL;
   struct stat file_stat;
@@ -188,14 +178,12 @@ help\nlist all files in the current dirctory if no option\n");
                  dir_e->filename);
           return;
         }
-        printf("%c %d %d ", ftype, dir_e->i_no, file_stat.st_size);
-        print_name(dir_e);
-        printf("\n");
+        printf("%c %d %d %s\n", ftype, dir_e->i_no, file_stat.st_size,
+               dir_e->filename);
       }
     } else {
       while ((dir_e = readdir(dir))) {
-        print_name(dir_e);
-        printf(" ");
+        printf("%s ", dir_e->filename);
       }
       printf("\n");
     }
@@ -308,3 +296,5 @@ int32_t buildin_rm(uint32_t argc, char** argv) {
   }
   return ret;
 }
+
+void buildin_help(uint32_t argc, char** argv) { help(); }

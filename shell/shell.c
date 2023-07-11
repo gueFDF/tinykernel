@@ -134,6 +134,8 @@ static void cmd_exectue(uint32_t argc, char** argv) {
     buildin_touch(argc, argv);
   } else if (!strcmp("pwd", argv[0])) {
     buildin_pwd(argc, argv);
+  } else if (!strcmp("help", argv[0])) {
+    buildin_help(argc, argv);
   } else {  // 如果是外部命令,需要从磁盘上加载
     int32_t pid = fork();
     if (pid) {  // 父进程
@@ -194,12 +196,10 @@ void my_shell(void) {
       argc = -1;
       argc = cmd_parse(each_cmd, argv, ' ');
       cmd_exectue(argc, argv);
-
       /* 跨过'|',处理下一个命令 */
       each_cmd = pipe_symbol + 1;
       // 将标准输入重定位到管道的输出
       fd_redirect(0, fd[0]);
-
       /*中间的命令,命令的输入和输出都是指向环形缓冲区 */
       while ((pipe_symbol = strchr(each_cmd, '|'))) {
         *pipe_symbol = 0;
@@ -214,6 +214,7 @@ void my_shell(void) {
       fd_redirect(1, 1);
 
       argc = -1;
+
       argc = cmd_parse(each_cmd, argv, ' ');
       cmd_exectue(argc, argv);
 

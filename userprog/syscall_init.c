@@ -8,6 +8,7 @@
 #include "pipe.h"
 #include "print.h"
 #include "stdint.h"
+#include "stdio_kernel.h"
 #include "string.h"
 #include "syscall.h"
 #include "thread.h"
@@ -18,6 +19,24 @@ syscall syscall_table[syscall_nr];
 
 /* 返回当前任务的pid */
 uint32_t sys_getpid(void) { return running_thread()->pid; }
+
+/* 显示系统支持的内部命令 */
+void sys_help(void) {
+  printk(
+      "\
+ buildin commands:\n\
+       ls: show directory or file information\n\
+       cd: change current work directory\n\
+       mkdir: create a directory\n\
+       rmdir: remove a empty directory\n\
+       rm: remove a regular file\n\
+       pwd: show current work directory\n\
+       ps: show process information\n\
+       clear: clear screen\n\
+ shortcut key:\n\
+       ctrl+l: clear screen\n\
+       ctrl+u: clear input\n\n");
+}
 
 /* 初始化系统调用 */
 void syscall_init(void) {
@@ -51,5 +70,6 @@ void syscall_init(void) {
   syscall_table[SYS_WAIT] = sys_wait;
   syscall_table[SYS_PIPE] = sys_pipe;
   syscall_table[SYS_FD_REDIRECT] = sys_fd_redirect;
+  syscall_table[SYS_HELP] = sys_help;
   put_str("syscall_init done\n");
 }

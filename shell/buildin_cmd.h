@@ -12,4 +12,5 @@ int32_t buildin_mkdir(uint32_t argc, char** argv);
 int32_t buildin_touch(uint32_t argc, char** argv);
 int32_t buildin_rmdir(uint32_t argc, char** argv);
 int32_t buildin_rm(uint32_t argc, char** argv);
+void buildin_help(uint32_t argc, char** argv);
 #endif /* SHELL_BUILDIN_CMD */

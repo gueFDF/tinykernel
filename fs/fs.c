@@ -544,6 +544,10 @@ int32_t sys_read(int32_t fd, void* buf, uint32_t count) {
       char* buffer = buf;
       uint32_t bytes_read = 0;
       while (bytes_read < count) {
+        // 支持行缓存和满缓冲
+        if (*(buffer - 1) == '\n') {
+          break;
+        }
         *buffer = ioq_getchar(&kbd_buf);
         bytes_read++;
         buffer++;
@@ -557,6 +561,7 @@ int32_t sys_read(int32_t fd, void* buf, uint32_t count) {
     uint32_t _fd = fd_local2global(fd);
     ret = file_read(&file_table[_fd], buf, count);
   }
+
   return ret;
 }
 

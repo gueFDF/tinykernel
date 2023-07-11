@@ -27,14 +27,55 @@ int main(void) {
   intr_enable();
   /*************    写入应用程序    *************/
   // load_user_code(18292, "prog_arg");
-  //load_user_code(20576, "cat");
+  // load_user_code(20576, "cat");
   /*************    写入应用程序结束   *************/
   cls_screen();
+  printf("\n");
+  put_color("             ______            ____  _____     \n", 11);
+
+  put_color("            / ____/           / __ \\/ ___/     ", 11);
+  put_color("Name:", 11);
+  printf("G-OS\n");
+  put_color("           / / __   ______   / / / /\\__ \\      ", 11);
+  put_color("Version:", 11);
+  printf("1.0.0.0\n");
+  put_color("          / /_/ /  /_____/  / /_/ /___/ /      ", 11);
+  put_color("Architecture:", 11);
+  printf("X86\n");
+  put_color("          \\____/            \\____//____/       ", 11);
+  put_color("Language:", 11);
+  printf("C\n");
+  printf("\n");
+
+  for (int i = 0; i < 80; i++) {
+    if (i % 9 == 0) {
+      put_color("-", 7);
+    } else if (i % 9 == 1) {
+      put_color("-", 8);
+    } else if (i % 9 == 2) {
+      put_color("-", 9);
+    } else if (i % 9 == 3) {
+      put_color("-", 10);
+    } else if (i % 9 == 4) {
+      put_color("-", 11);
+    } else if (i % 9 == 5) {
+      put_color("-", 12);
+    } else if (i % 9 == 6) {
+      put_color("-", 13);
+    } else if (i % 9 == 7) {
+      put_color("-", 14);
+    } else if (i % 9 == 8) {
+      put_color("-", 15);
+    }
+  }
+
+  printf("\n\n");
   console_put_str("[rabbit@localhost /]$ ");
   while (1)
     ;
   return 0;
 }
+
 /* 在线程中运行的函数 */
 void k_thread_a(void* arg) {
   while (1)
